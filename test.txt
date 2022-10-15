@@ -1,0 +1,96 @@
+
+TINY COMPILATION: example_code_1.c
+
+>>> Syntax error at line 1: unexpected token -> /
+
+>>> Syntax error at line 1: unexpected token -> *
+      
+>>> Syntax error at line 1: unexpected token -> *
+
+>>> Syntax error at line 1: unexpected token -> ID, name= binary
+      
+>>> Syntax error at line 1: unexpected token -> ERROR: _
+      
+>>> Syntax error at line 1: unexpected token -> ERROR: _
+
+>>> Syntax error at line 1: unexpected token -> ID, name= search
+      
+>>> Syntax error at line 1: unexpected token -> ID, name= program
+      
+>>> Syntax error at line 1: unexpected token -> /
+
+>>> Syntax error at line 2: unexpected token -> ID, name= int
+      
+>>> Syntax error at line 2: unexpected token -> ID, name= arr
+      
+>>> Syntax error at line 2: unexpected token -> ERROR: [
+      
+>>> Syntax error at line 2: unexpected token -> ERROR: [
+
+>>> Syntax error at line 2: unexpected token -> NUM, val= 11111
+      
+>>> Syntax error at line 2: unexpected token -> NUM, val= 11111
+
+>>> Syntax error at line 2: unexpected token -> ERROR: ]
+      
+>>> Syntax error at line 2: unexpected token -> ERROR: ]
+
+>>> Syntax error at line 3: unexpected token -> ID, name= binarySearch
+      
+>>> Syntax error at line 3: unexpected token -> (
+      
+>>> Syntax error at line 3: unexpected token -> (
+
+>>> Syntax error at line 3: unexpected token -> ID, name= int
+      
+>>> Syntax error at line 3: unexpected token -> ID, name= x
+      
+>>> Syntax error at line 3: unexpected token -> )
+      
+>>> Syntax error at line 3: unexpected token -> )
+
+>>> Syntax error at line 11: unexpected token -> ID, name= return
+      
+>>> Syntax error at line 11: unexpected token -> -
+      
+>>> Syntax error at line 11: unexpected token -> -
+
+>>> Syntax error at line 11: unexpected token -> NUM, val= 1
+      
+>>> Syntax error at line 11: unexpected token -> NUM, val= 1
+
+>>> Syntax error at line 12: unexpected token -> ERROR: }
+
+>>> Syntax error at line 14: unexpected token -> ID, name= int
+      
+>>> Syntax error at line 14: unexpected token -> ID, name= main
+      
+>>> Syntax error at line 14: unexpected token -> (
+      
+>>> Syntax error at line 14: unexpected token -> (
+
+>>> Syntax error at line 14: unexpected token -> )
+      
+>>> Syntax error at line 14: unexpected token -> )
+
+>>> Syntax error at line 19: unexpected token -> ID, name= goal
+      
+>>> Syntax error at line 19: unexpected token -> =
+      
+>>> Syntax error at line 19: unexpected token -> =
+
+>>> Syntax error at line 19: unexpected token -> NUM, val= 100
+      
+>>> Syntax error at line 19: unexpected token -> NUM, val= 100
+
+>>> Syntax error at line 20: unexpected token -> =
+      
+>>> Syntax error at line 20: unexpected token -> =
+
+>>> Syntax error at line 20: unexpected token -> ID, name= binarySearch
+      
+>>> Syntax error at line 20: unexpected token -> (
+      
+>>> Syntax error at line 21: unexpected token -> NUM, val= 0
+      
+>>> Syntax error at line 22: unexpected token -> ERROR: }

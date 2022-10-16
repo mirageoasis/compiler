@@ -57,3 +57,4 @@ yacc/
 
 # hw1_binary
 hw1_binary
+lex.yy.c

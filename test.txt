@@ -1,96 +1,131 @@
 
 TINY COMPILATION: example_code_1.c
-
->>> Syntax error at line 1: unexpected token -> /
-
->>> Syntax error at line 1: unexpected token -> *
-      
->>> Syntax error at line 1: unexpected token -> *
-
->>> Syntax error at line 1: unexpected token -> ID, name= binary
-      
->>> Syntax error at line 1: unexpected token -> ERROR: _
-      
->>> Syntax error at line 1: unexpected token -> ERROR: _
-
->>> Syntax error at line 1: unexpected token -> ID, name= search
-      
->>> Syntax error at line 1: unexpected token -> ID, name= program
-      
->>> Syntax error at line 1: unexpected token -> /
-
->>> Syntax error at line 2: unexpected token -> ID, name= int
-      
->>> Syntax error at line 2: unexpected token -> ID, name= arr
-      
->>> Syntax error at line 2: unexpected token -> ERROR: [
-      
->>> Syntax error at line 2: unexpected token -> ERROR: [
-
->>> Syntax error at line 2: unexpected token -> NUM, val= 11111
-      
->>> Syntax error at line 2: unexpected token -> NUM, val= 11111
-
->>> Syntax error at line 2: unexpected token -> ERROR: ]
-      
->>> Syntax error at line 2: unexpected token -> ERROR: ]
-
->>> Syntax error at line 3: unexpected token -> ID, name= binarySearch
-      
->>> Syntax error at line 3: unexpected token -> (
-      
->>> Syntax error at line 3: unexpected token -> (
-
->>> Syntax error at line 3: unexpected token -> ID, name= int
-      
->>> Syntax error at line 3: unexpected token -> ID, name= x
-      
->>> Syntax error at line 3: unexpected token -> )
-      
->>> Syntax error at line 3: unexpected token -> )
-
->>> Syntax error at line 11: unexpected token -> ID, name= return
-      
->>> Syntax error at line 11: unexpected token -> -
-      
->>> Syntax error at line 11: unexpected token -> -
-
->>> Syntax error at line 11: unexpected token -> NUM, val= 1
-      
->>> Syntax error at line 11: unexpected token -> NUM, val= 1
-
->>> Syntax error at line 12: unexpected token -> ERROR: }
-
->>> Syntax error at line 14: unexpected token -> ID, name= int
-      
->>> Syntax error at line 14: unexpected token -> ID, name= main
-      
->>> Syntax error at line 14: unexpected token -> (
-      
->>> Syntax error at line 14: unexpected token -> (
-
->>> Syntax error at line 14: unexpected token -> )
-      
->>> Syntax error at line 14: unexpected token -> )
-
->>> Syntax error at line 19: unexpected token -> ID, name= goal
-      
->>> Syntax error at line 19: unexpected token -> =
-      
->>> Syntax error at line 19: unexpected token -> =
-
->>> Syntax error at line 19: unexpected token -> NUM, val= 100
-      
->>> Syntax error at line 19: unexpected token -> NUM, val= 100
-
->>> Syntax error at line 20: unexpected token -> =
-      
->>> Syntax error at line 20: unexpected token -> =
-
->>> Syntax error at line 20: unexpected token -> ID, name= binarySearch
-      
->>> Syntax error at line 20: unexpected token -> (
-      
->>> Syntax error at line 21: unexpected token -> NUM, val= 0
-      
->>> Syntax error at line 22: unexpected token -> ERROR: }
+    line number			token			lexeme
+================================================================================
+	2			INT			int
+	2			ID			arr
+	2			[			[
+	2			NUM			11111
+	2			]			]
+	2			;			;
+	3			INT			int
+	3			ID			binarySearch
+	3			(			(
+	3			INT			int
+	3			ID			x
+	3			)			)
+	3			{			{
+	4			INT			int
+	4			ID			left
+	4			=			=
+	4			NUM			0
+	4			,			,
+	4			ID			right
+	4			=			=
+	4			NUM			11111
+	4			,			,
+	4			ID			mid
+	4			;			;
+	5			WHILE			while
+	5			(			(
+	5			ID			left
+	5			<=			<=
+	5			ID			right
+	5			)			)
+	5			{			{
+	6			ID			mid
+	6			=			=
+	6			(			(
+	6			ID			left
+	6			<=			<=
+	6			ID			right
+	6			)			)
+	6			/			/
+	6			NUM			2
+	6			;			;
+	7			IF			if
+	7			(			(
+	7			ID			mid
+	7			==			==
+	7			ID			x
+	7			)			)
+	7			RETURN			return
+	7			ID			mid
+	7			;			;
+	8			ELSE			else
+	8			IF			if
+	8			(			(
+	8			ID			mid
+	8			<			<
+	8			ID			x
+	8			)			)
+	8			ID			left
+	8			=			=
+	8			ID			mid
+	8			+			+
+	8			NUM			1
+	8			;			;
+	9			ELSE			else
+	9			ID			right
+	9			=			=
+	9			ID			mid
+	9			-			-
+	9			NUM			1
+	9			;			;
+	10			}			}
+	11			RETURN			return
+	11			-			-
+	11			NUM			1
+	11			;			;
+	12			}			}
+	14			INT			int
+	14			ID			main
+	14			(			(
+	14			)			)
+	14			{			{
+	15			INT			int
+	15			ID			i
+	15			,			,
+	15			ID			goal
+	15			,			,
+	15			ID			res
+	15			;			;
+	16			ID			for
+	16			(			(
+	16			ID			i
+	16			=			=
+	16			NUM			0
+	16			;			;
+	16			ID			i
+	16			<			<
+	16			NUM			11111
+	16			;			;
+	16			ID			i
+	16			+			+
+	16			+			+
+	16			)			)
+	16			{			{
+	17			ID			arr
+	17			[			[
+	17			ID			i
+	17			]			]
+	17			=			=
+	17			ID			i
+	17			;			;
+	18			}			}
+	19			ID			goal
+	19			=			=
+	19			NUM			100
+	19			;			;
+	20			ID			res
+	20			=			=
+	20			ID			binarySearch
+	20			(			(
+	20			ID			goal
+	20			)			)
+	20			;			;
+	21			RETURN			return
+	21			NUM			0
+	21			;			;
+	22			}			}
+	22			EOF

@@ -16,7 +16,7 @@
  * generate code
  */
 #define NO_CODE FALSE
-#define TEST FALSE
+#define TEST TRUE
 
 #include "util.h"
 #if NO_PARSE
@@ -76,6 +76,9 @@ main(int argc, char *argv[])
 
   // listing 을 고치면 파일에 쓰는게 가능하다.
   fprintf(listing, "\nTINY COMPILATION: %s\n", pgm);
+  fprintf(listing, "    line number\t\t\ttoken\t\t\tlexeme\n");
+  fprintf(listing, "================================================================================\n");
+  // 위의 형식 맞춰주기
 #if NO_PARSE
   while (getToken() != ENDFILE);
 #else

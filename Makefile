@@ -4,7 +4,7 @@ CFLAGS =
 
 OBJS = main.o util.o lex.yy.o
 
-20171628: $(OBJS)
+hw1_binary: $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o hw1_binary
 
 main.o: main.c globals.h util.h

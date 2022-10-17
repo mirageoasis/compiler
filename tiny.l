@@ -53,7 +53,8 @@ whitespace  [ \t]+
 {whitespace}    {/* skip whitespace */}
 "/*"             { char c; int state = 0; // 0이면 비활성화
                   do
-                  { c = input();
+                  { 
+                    c = input();
                     //fprintf(stdout, "%c\n", c);
                     //fprintf(stdout, "%d\n", c);
                     if (c == EOF) break;

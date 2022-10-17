@@ -30,6 +30,7 @@ typedef enum
 {
    ENDFILE,
    ERROR,
+   COMMENT_ERROR,
    /* reserved words */
    IF,
    ELSE,

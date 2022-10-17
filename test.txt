@@ -1,5 +1,5 @@
 
-TINY COMPILATION: no_comment.c
+TINY COMPILATION: example_code_1.c
     line number			token			lexeme
 ================================================================================
 	2			INT			int
@@ -26,7 +26,9 @@ TINY COMPILATION: no_comment.c
 	4			,			,
 	4			ID			mid
 	4			;			;
-	5			ID			whileleft
+	5			WHILE			while
+	5			(			(
+	5			ID			left
 	5			<=			<=
 	5			ID			right
 	5			)			)

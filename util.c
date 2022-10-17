@@ -108,6 +108,10 @@ void printToken(TokenType token, const char *tokenString)
   case ENDFILE:
     fprintf(listing, "EOF\n");
     break;
+  case COMMENT_ERROR:
+    fprintf(listing,
+            "ERROR\t\t\tComment Error\n");
+    break;
   case ERROR:
     fprintf(listing,
             "ERROR: %s\n", tokenString);

@@ -9,7 +9,9 @@ TINY COMPILATION: example_code_1.c
 	2			]			]
 	2			;			;
 	3			INT			int
-	3			ID			binarySearch
+	3			ID			binary
+	3			NUM			4
+	3			ID			Search
 	3			(			(
 	3			INT			int
 	3			ID			x

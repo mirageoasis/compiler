@@ -16,7 +16,7 @@
  * generate code
  */
 #define NO_CODE FALSE
-#define TEST TRUE
+#define WRITE TRUE
 
 #include "util.h"
 #if NO_PARSE
@@ -50,6 +50,8 @@ main(int argc, char *argv[])
 {
   TreeNode *syntaxTree;
   char pgm[120]; /* source code file name */
+  char file_name[128];
+  char *dot_loc;
   // 인수 개수 check
   if (argc != 2)
   {
@@ -69,9 +71,19 @@ main(int argc, char *argv[])
   }
   // 써줄 파일 이름 찾기
   listing = stdout; /* send listing to screen */
-#if TEST
-  FILE* test_file = fopen("test.txt", "w");
-  listing = test_file; /* to file */
+
+  strcpy(file_name, pgm);
+
+  if ((dot_loc = strchr(file_name, '.')) == NULL)
+    strcat(file_name, "_20171628.txt");
+
+  strcpy(dot_loc, "_20171628.txt");
+
+  fprintf(stdout, "file name is %s\n", file_name);
+  
+#if WRITE
+  FILE* write_file = fopen(file_name, "w");
+  listing = write_file; /* to file */
 #endif
 
   // listing 을 고치면 파일에 쓰는게 가능하다.
@@ -121,8 +133,8 @@ main(int argc, char *argv[])
 #endif
 #endif
   fclose(source);
-#if TEST
-  fclose(test_file);
+#if WRITE
+  fclose(write_file);
 #endif
   return 0;
 }

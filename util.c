@@ -112,6 +112,10 @@ void printToken(TokenType token, const char *tokenString)
     fprintf(listing,
             "ERROR\t\t\tComment Error\n");
     break;
+  case ID_ERROR:
+    fprintf(listing,
+            "ERROR\t\t\tIdentifier Error\n");
+    break;
   case ERROR:
     fprintf(listing,
             "ERROR: %s\n", tokenString);

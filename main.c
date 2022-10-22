@@ -79,8 +79,8 @@ main(int argc, char *argv[])
 
   strcpy(dot_loc, "_20171628.txt");
 
-  fprintf(stdout, "file name is %s\n", file_name);
-  
+  //fprintf(stdout, "file name is %s\n", file_name);
+
 #if WRITE
   FILE* write_file = fopen(file_name, "w");
   listing = write_file; /* to file */

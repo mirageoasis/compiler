@@ -31,6 +31,7 @@ typedef enum
    ENDFILE,
    ERROR,
    COMMENT_ERROR,
+   ID_ERROR,
    /* reserved words */
    IF,
    ELSE,

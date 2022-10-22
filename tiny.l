@@ -17,6 +17,11 @@ digit       [0-9]
 number      {digit}+
 letter      [a-zA-Z]
 identifier  {letter}+
+error_1    {identifier}+{number}+
+error_2    {number}+{identifier}+
+error_3    {error_1}{identifier}
+error_4    {error_2}{number}
+error_5 ({error_1}|{error_2}|{error_3}|{error_4})
 newline     \n
 whitespace  [ \t]+
 
@@ -29,6 +34,7 @@ whitespace  [ \t]+
 "void"          {return VOID;}
 "while"         {return WHILE;}
 {identifier}    {return ID;}
+{error_3}  {return ID_ERROR;}
 {number}        {return NUM;}
 "+"             {return PLUS;}
 "-"             {return MINUS;}

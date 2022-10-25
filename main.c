@@ -87,9 +87,9 @@ main(int argc, char *argv[])
 #endif
 
   // listing 을 고치면 파일에 쓰는게 가능하다.
-  fprintf(listing, "\nTINY COMPILATION: %s\n", pgm);
-  fprintf(listing, "    line number\t\t\ttoken\t\t\tlexeme\n");
-  fprintf(listing, "================================================================================\n");
+  //fprintf(listing, "\nTINY COMPILATION: %s\n", pgm);
+  fprintf(listing, "line number\t\t\ttoken\t\t\tlexeme\n");
+  fprintf(listing, "-------------------------------------------------------------------------------\n");
   // 위의 형식 맞춰주기
 #if NO_PARSE
   while (getToken() != ENDFILE);

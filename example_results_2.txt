@@ -1,6 +1,0 @@
-
-TINY COMPILATION: test2.c
-    line number			token			lexeme
-================================================================================
-	10			ERROR			Comment Error
-	10			EOF

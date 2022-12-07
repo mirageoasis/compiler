@@ -12,6 +12,7 @@
 #include "scan.h"
 #include "parse.h"
 
+#define YYTOKENTYPE
 #define YYSTYPE TreeNode *
 static char * savedName; /* for use in assignments */
 static int savedLineNo;  /* ditto */
@@ -19,10 +20,13 @@ static TreeNode * savedTree; /* stores syntax tree for later return */
 
 %}
 
-%token IF THEN ELSE END REPEAT UNTIL READ WRITE
-%token ID NUM 
-%token ASSIGN EQ LT PLUS MINUS TIMES OVER LPAREN RPAREN SEMI
-%token ERROR 
+%token IF ELSE INT RETURN VOID WHILE
+%token ID NUM ID_ERROR
+%token PLUS MINUS TIMES DIV
+%token LT LTE GT GTE EQ NEQ
+%token ASSIGN SEMI COMMA
+%token LPAREN RPAREN LCURL RCURL LBRACKET RBRACKET
+%token ERROR
 
 %% /* Grammar for TINY */
 
@@ -47,12 +51,12 @@ stmt        : if_stmt { $$ = $1; }
             | write_stmt { $$ = $1; }
             | error  { $$ = NULL; }
             ;
-if_stmt     : IF exp THEN stmt_seq END
+if_stmt     : IF LPAREN exp RPAREN stmt_seq
                  { $$ = newStmtNode(IfK);
                    $$->child[0] = $2;
                    $$->child[1] = $4;
                  }
-            | IF exp THEN stmt_seq ELSE stmt_seq END
+            | IF LPAREN exp RPAREN stmt_seq ELSE stmt_seq
                  { $$ = newStmtNode(IfK);
                    $$->child[0] = $2;
                    $$->child[1] = $4;
@@ -119,11 +123,11 @@ term        : term TIMES factor
                    $$->child[1] = $3;
                    $$->attr.op = TIMES;
                  }
-            | term OVER factor
+            | term DIV factor
                  { $$ = newExpNode(OpK);
                    $$->child[0] = $1;
                    $$->child[1] = $3;
-                   $$->attr.op = OVER;
+                   $$->attr.op = DIV;
                  }
             | factor { $$ = $1; }
             ;

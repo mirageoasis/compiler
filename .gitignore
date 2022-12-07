@@ -57,6 +57,7 @@ yacc/
 
 # hw1_binary
 hw1_binary
+hw2_binary
 lex.yy.c
 cminus
 

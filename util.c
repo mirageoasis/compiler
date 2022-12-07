@@ -125,7 +125,7 @@ void printToken(TokenType token, const char *tokenString)
   }
 }
 
-/* Function newStmtNode creates a new statement
+/* Function StmtNode creates a new statement
  * node for syntax tree construction
  */
 TreeNode *newStmtNode(StmtKind kind)

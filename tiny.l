@@ -26,6 +26,7 @@ newline     \n
 whitespace  [ \t]+
 
 %%
+%lalr-parser
 
 "if"            {return IF;}
 "else"          {return ELSE;}
@@ -102,9 +103,4 @@ TokenType getToken(void)
 int yywrap()
 {
         /* actions for reaching EOF */
-}
-
-void yyerror(char const *msg)
-{
-        strcpy(yytext, msg);
 }

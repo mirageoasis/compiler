@@ -6,34 +6,23 @@
 /****************************************************/
 %{
 #define YYPARSER /* distinguishes Yacc output from other code files */
-#define YYDEBUG 1
 
 #include "globals.h"
 #include "util.h"
 #include "scan.h"
 #include "parse.h"
 
-#define YYTOKENTYPE
 #define YYSTYPE TreeNode *
-
-int yyerror(char* message);
-static int yylex(void);
-
 static char * savedName; /* for use in assignments */
 static int savedLineNo;  /* ditto */
 static TreeNode * savedTree; /* stores syntax tree for later return */
 
 %}
 
-
-
-%token IF ELSE INT RETURN VOID WHILE
-%token ID NUM ID_ERROR
-%token PLUS MINUS TIMES DIV
-%token LT LTE GT GTE EQ NEQ
-%token ASSIGN SEMI COMMA
-%token LPAREN RPAREN LCURL RCURL LBRACKET RBRACKET
-%token ERROR
+%token IF THEN ELSE END REPEAT UNTIL READ WRITE
+%token ID NUM 
+%token ASSIGN EQ LT PLUS MINUS TIMES OVER LPAREN RPAREN SEMI
+%token ERROR 
 
 %% /* Grammar for TINY */
 
@@ -52,29 +41,30 @@ stmt_seq    : stmt_seq SEMI stmt
             | stmt  { $$ = $1; }
             ;
 stmt        : if_stmt { $$ = $1; }
+            | repeat_stmt { $$ = $1; }
             | assign_stmt { $$ = $1; }
+            | read_stmt { $$ = $1; }
+            | write_stmt { $$ = $1; }
             | error  { $$ = NULL; }
             ;
-if_stmt     : IF LPAREN exp RPAREN stmt_seq
+if_stmt     : IF exp THEN stmt_seq END
                  { $$ = newStmtNode(IfK);
                    $$->child[0] = $2;
                    $$->child[1] = $4;
                  }
-            | IF LPAREN exp RPAREN stmt_seq ELSE stmt_seq
+            | IF exp THEN stmt_seq ELSE stmt_seq END
                  { $$ = newStmtNode(IfK);
                    $$->child[0] = $2;
                    $$->child[1] = $4;
                    $$->child[2] = $6;
                  }
             ;
-/*
 repeat_stmt : REPEAT stmt_seq UNTIL exp
                  { $$ = newStmtNode(RepeatK);
                    $$->child[0] = $2;
                    $$->child[1] = $4;
                  }
             ;
-*/
 assign_stmt : ID { savedName = copyString(tokenString);
                    savedLineNo = lineno; }
               ASSIGN exp
@@ -84,7 +74,6 @@ assign_stmt : ID { savedName = copyString(tokenString);
                    $$->lineno = savedLineNo;
                  }
             ;
-/*
 read_stmt   : READ ID
                  { $$ = newStmtNode(ReadK);
                    $$->attr.name =
@@ -96,7 +85,6 @@ write_stmt  : WRITE exp
                    $$->child[0] = $2;
                  }
             ;
-*/
 exp         : simple_exp LT simple_exp 
                  { $$ = newExpNode(OpK);
                    $$->child[0] = $1;
@@ -131,11 +119,11 @@ term        : term TIMES factor
                    $$->child[1] = $3;
                    $$->attr.op = TIMES;
                  }
-            | term DIV factor
+            | term OVER factor
                  { $$ = newExpNode(OpK);
                    $$->child[0] = $1;
                    $$->child[1] = $3;
-                   $$->attr.op = DIV;
+                   $$->attr.op = OVER;
                  }
             | factor { $$ = $1; }
             ;

@@ -8,7 +8,7 @@
 #include "globals.h"
 
 /* set NO_PARSE to TRUE to get a scanner-only compiler */
-#define NO_PARSE TRUE
+#define NO_PARSE FALSE
 /* set NO_ANALYZE to TRUE to get a parser-only compiler */
 #define NO_ANALYZE TRUE
 
@@ -88,8 +88,8 @@ main(int argc, char *argv[])
 
   // listing 을 고치면 파일에 쓰는게 가능하다.
   //fprintf(listing, "\nTINY COMPILATION: %s\n", pgm);
-  fprintf(listing, "line number\t\t\ttoken\t\t\tlexeme\n");
-  fprintf(listing, "-------------------------------------------------------------------------------\n");
+  //fprintf(listing, "line number\t\t\ttoken\t\t\tlexeme\n");
+  //fprintf(listing, "-------------------------------------------------------------------------------\n");
   // 위의 형식 맞춰주기
 #if NO_PARSE
   while (getToken() != ENDFILE);

@@ -115,6 +115,7 @@ TreeNode * declaration_list(void)
   TreeNode *first_sibling_pointer;
 	TreeNode *now;
   first = declaration();
+  first_sibling_pointer = first;
   while(token != ENDFILE){
     now = declaration();
     if (now!=NULL){
@@ -148,7 +149,7 @@ TreeNode * declaration(void)
 	name = copyString(tokenString);
   // id를 맞추고
 	match(ID);
-  //printf("function decl\n");
+  printf("in function declaration\n");
   // id를 확인하면 다음 토큰은 
 	
   if(token == SEMI){
@@ -231,6 +232,7 @@ TreeNode* param_list(ExpType type){
 	TreeNode *now;
   printf("in param_list function!\n");
   first = param(type);
+  first_sibling_pointer = first;
   while(token == COMMA){
     /// 여러개 있는 경우
     // comma 맞춰주자
@@ -247,6 +249,7 @@ TreeNode* param_list(ExpType type){
       else
       { 
         /// 형제의 위치로 이동하는 상황
+        printf("has sibling!\n");
         first_sibling_pointer->sibling = now;
         first_sibling_pointer = now;
       }

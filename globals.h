@@ -21,9 +21,52 @@
 #ifndef TRUE
 #define TRUE 1
 #endif
+#endif
 
 /* MAXRESERVED = the number of reserved words */
 #define MAXRESERVED 6
+
+
+extern FILE *source;  /* source code text file */
+extern FILE *listing; /* listing output text file */
+extern FILE *code;    /* code text file for TM simulator */
+
+extern int lineno; /* source line number for listing */
+
+/**************************************************/
+/***********   Syntax tree for parsing ************/
+/**************************************************/
+
+typedef enum
+{
+   StmtK,
+   ExpK
+} NodeKind;
+typedef enum
+{
+   IfK,
+   RepeatK,
+   AssignK,
+   ReadK,
+   WriteK
+} StmtKind;
+typedef enum
+{
+   OpK,
+   ConstK,
+   IdK,
+   VarDelcare,
+   FunctionDeclare
+} ExpKind;
+
+/* ExpType is used for type checking */
+typedef enum
+{
+   Void,
+   Integer
+} ExpType;
+
+#define MAXCHILDREN 3
 
 typedef enum
 /* book-keeping tokens */
@@ -74,45 +117,6 @@ typedef enum
    RBRACKET
 } TokenType;
 
-extern FILE *source;  /* source code text file */
-extern FILE *listing; /* listing output text file */
-extern FILE *code;    /* code text file for TM simulator */
-
-extern int lineno; /* source line number for listing */
-
-/**************************************************/
-/***********   Syntax tree for parsing ************/
-/**************************************************/
-
-typedef enum
-{
-   StmtK,
-   ExpK
-} NodeKind;
-typedef enum
-{
-   IfK,
-   RepeatK,
-   AssignK,
-   ReadK,
-   WriteK
-} StmtKind;
-typedef enum
-{
-   OpK,
-   ConstK,
-   IdK
-} ExpKind;
-
-/* ExpType is used for type checking */
-typedef enum
-{
-   Void,
-   Integer,
-   Boolean
-} ExpType;
-
-#define MAXCHILDREN 3
 
 typedef struct treeNode
 {
@@ -168,4 +172,3 @@ extern int TraceCode;
 
 /* Error = TRUE prevents further passes if an error occurs */
 extern int Error;
-#endif

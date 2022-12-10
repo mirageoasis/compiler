@@ -6,29 +6,22 @@
 /****************************************************/
 %{
 #define YYPARSER /* distinguishes Yacc output from other code files */
-#define YYDEBUG 1
 
 #include "globals.h"
 #include "util.h"
 #include "scan.h"
 #include "parse.h"
 
-#define YYTOKENTYPE
 #define YYSTYPE TreeNode *
-
-int yyerror(char* message);
-static int yylex(void);
-
 static char * savedName; /* for use in assignments */
 static int savedLineNo;  /* ditto */
 static TreeNode * savedTree; /* stores syntax tree for later return */
-
+static int yylex(void);
+int yyerror(char* message);
 %}
 
-
-
 %token IF ELSE INT RETURN VOID WHILE
-%token ID NUM ID_ERROR
+%token ID NUM ID_ERROR COMMENT_ERROR
 %token PLUS MINUS TIMES DIV
 %token LT LTE GT GTE EQ NEQ
 %token ASSIGN SEMI COMMA
@@ -169,7 +162,10 @@ static int yylex(void)
 { return getToken(); }
 
 TreeNode * parse(void)
-{ yyparse();
+{ 
+  printf("outofparse");
+  yyparse();
+  printf("outofparse");
   return savedTree;
 }
 

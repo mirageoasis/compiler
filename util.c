@@ -203,6 +203,18 @@ static void printSpaces(void)
     fprintf(listing, " ");
 }
 
+char *printType(ExpType type)
+{
+  if (type == Integer){
+    return "int";
+  }else if (type == Void){
+    return "void";
+  }else{
+    return "type error";
+  }
+}
+
+
 /* procedure printTree prints a syntax tree to the
  * listing file using indentation to indicate subtrees
  */
@@ -210,9 +222,11 @@ void printTree(TreeNode *tree)
 {
   int i;
   INDENT;
+  //printf("in function printTree\n");
   while (tree != NULL)
   {
     printSpaces();
+    //printf("tree is not null!\n");
     if (tree->nodekind == StmtK)
     {
       switch (tree->kind.stmt)
@@ -251,6 +265,9 @@ void printTree(TreeNode *tree)
       case IdK:
         fprintf(listing, "Id: %s\n", tree->attr.name);
         break;
+      case VarDelcare:
+					fprintf(listing, "Var Declare, name : %s, type : %s\n",tree->attr.name, printType(tree->type));
+				break;
       default:
         fprintf(listing, "Unknown ExpNode kind\n");
         break;

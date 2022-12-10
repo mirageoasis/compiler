@@ -46,7 +46,6 @@ typedef enum
 {
    IfK,
    RepeatK,
-   AssignK,
    ReadK,
    WriteK,
    ReturnK,
@@ -57,6 +56,7 @@ typedef enum
    OpK,
    ConstK,
    IdK,
+   AssignK,
    VarDelcare,
    ArrayDeclare,
    FunctionDeclare

@@ -53,7 +53,7 @@ TODO
 1. compound statement 개발
 2. statement-list 따져보자
 4. statement-list 개발
-5. expression | coumpound_statement | selection_statement| iteration_statement | return stmt
+5. expression | selection_statement| iteration_statement | return stmt
 6. 일단 return stmt 만 개발해서 함수가 되는지 확인
 
 */
@@ -68,9 +68,11 @@ static TreeNode * var_declarations(void);
 static TreeNode * local_declarations(void);
 static TreeNode * statement_list(void);
 
+static TreeNode * var(void);
+
 static TreeNode * declaration(void);
 static TreeNode * statement(void);
-static TreeNode * if_stmt(void);
+static TreeNode * selection_stmt(void);
 static TreeNode * repeat_stmt(void);
 static TreeNode * assign_stmt(void);
 static TreeNode * read_stmt(void);
@@ -186,8 +188,6 @@ TreeNode * declaration(void)
     match(SEMI);
   }
   else if(token == LPAREN){
-    // 아직 함수 PARAMETER 완성 안됨
-    // 함수 parameter 가 비었다고 가정한다.
     t = newExpNode(FunctionDeclare);
     printf("function in declartion function\n");
 		if (t != NULL)
@@ -206,6 +206,7 @@ TreeNode * declaration(void)
 
     if (t != NULL)
 			t->child[1] = compound_statement();
+    
 
   }else{
     printToken(token, tokenString);
@@ -224,12 +225,12 @@ TreeNode* params(void){
   // 
   if (type == Void && token == RPAREN){
     // parameter 가 없는 케이스
-    printf("no parameter!\n");
+    //printf("no parameter!\n");
     ret = newExpNode(VarDelcare);
     ret->IsParameter = TRUE;
     ret->type = Void;
   }else{
-    printf("yes parameter!\n");
+    //printf("yes parameter!\n");
     ret = param_list(type);
   }
   return ret;
@@ -241,7 +242,7 @@ TreeNode* param_list(ExpType type){
   TreeNode *first;
   TreeNode *first_sibling_pointer;
 	TreeNode *now;
-  printf("in param_list function!\n");
+  //printf("in param_list function!\n");
   first = param(type);
   first_sibling_pointer = first;
   while(token == COMMA){
@@ -257,7 +258,7 @@ TreeNode* param_list(ExpType type){
       else
       { 
         /// 형제의 위치로 이동하는 상황
-        printf("has sibling!\n");
+        //printf("has sibling!\n");
         first_sibling_pointer->sibling = now;
         first_sibling_pointer = now;
       }
@@ -271,7 +272,7 @@ TreeNode* param(ExpType type){
   // parameter 함수 선언하고 // semicolon 있는지 확인
   char *name = copyString(tokenString);// id 이름 베끼고
   match(ID);
-  printf("in param function!\n");
+  //printf("in param function!\n");
   // id 까지는 동일
   
   if (token == LBRACKET)
@@ -281,7 +282,7 @@ TreeNode* param(ExpType type){
 		ret = newExpNode(ArrayDeclare);
 	}
 	else{
-    fprintf(stdout, "var declare\n");
+    //fprintf(stdout, "var declare\n");
 		ret = newExpNode(VarDelcare);
   }
 	
@@ -298,14 +299,15 @@ TreeNode* param(ExpType type){
 TreeNode * compound_statement(void){
   // 일단 local declartion 개발 하자
   // 
-  TreeNode *t = newStmtNode(CompoundK);
+  TreeNode *ret = newStmtNode(CompoundK);
   // 괄호 맞춰주기
-  match(LCURL);
   fprintf(stdout,"in compound function!\n");
-  t->child[0] = local_declarations();
-  t->child[1] = statement_list();
+  match(LCURL);
+  ret->child[0] = local_declarations();
+  ret->child[1] = statement_list();
   match(RCURL);
   // 괄호 맞춰주기
+  return ret;
 }
 
 TreeNode *local_declarations(void)
@@ -345,7 +347,7 @@ TreeNode * var_declarations(void){
   TreeNode *ret;
   // id를 맞추고
 	match(ID);
-  printf("in function variance declaration\n");
+  //printf("in function variance declaration\n");
   // id를 확인하면 다음 토큰은 
 	
   if(token == SEMI){
@@ -355,7 +357,7 @@ TreeNode * var_declarations(void){
 			ret->attr.name = name;
 			ret->type = type;
 		}
-    fprintf(stdout, "변수 선언\n");
+    //fprintf(stdout, "변수 선언\n");
     match(SEMI);
   }else if(token == LBRACKET){
     ret = newExpNode(ArrayDeclare);
@@ -392,8 +394,6 @@ TreeNode * statement_list(void)
   // TODO 
   // 완성한거 따라서 if 문에 token 추가하기
   
-
-
   if (token == IF || token == ID || token == RETURN)
     ret = statement();
   ret_sibling_pointer = ret;
@@ -428,11 +428,16 @@ TreeNode * statement(void)
   
   TreeNode * t = NULL;
   switch (token) {
-    case IF : t = if_stmt(); break;
-    case ID : t = assign_stmt(); break;
+    case IF : 
+      t = selection_stmt(); 
+      break;
+    case ID : 
+      t = expression(); 
+      break;
     case RETURN: 
       match(RETURN);
-      t =  return_stmt();break;
+      t =  return_stmt();
+      break;
     default : syntaxError("unexpected token -> ");
               printToken(token,tokenString);
               token = getToken();
@@ -454,7 +459,7 @@ TreeNode * return_stmt(void)
   return t;
 }
 
-TreeNode * if_stmt(void)
+TreeNode * selection_stmt(void)
 { TreeNode * t = newStmtNode(IfK);
   match(IF);
   if (t!=NULL) t->child[0] = expression();
@@ -485,24 +490,88 @@ TreeNode * assign_stmt(void)
   return t;
 }
 
-TreeNode * expression(void)
-{ TreeNode * t = simple_expression();
-  if ((token==LT)||(token==EQ)) {
-    TreeNode * p = newExpNode(OpK);
-    if (p!=NULL) {
-      p->child[0] = t;
-      p->attr.op = token;
-      t = p;
+TreeNode *expression(void)
+{
+  // TreeNode * t = simple_expression();
+  TreeNode *ret;
+  TreeNode *temp = NULL;
+  // 일단 var = expresssion 을 만든다.
+  fprintf(stdout,"in expression function\n");
+  fprintf(stdout,"current token %d\n", token);
+  if (token == ID)
+  {
+    temp = var();
+    if (token == ASSIGN)
+    {
+      // 같다고 선언
+      match(ASSIGN);
+      if (temp != NULL && temp->nodekind == ExpK && temp->kind.exp == IdK)
+      {
+        fprintf(stdout,"assing is going on!\n");
+        match(ASSIGN);
+        ret = newExpNode(AssignK);
+        if (ret != NULL)
+        {
+          ret->child[0] = temp;
+          ret->child[1] = expression();
+        }
+      }
+      else
+      {
+        syntaxError("plz put right value on left sign\n");
+        token = getToken();
+      }
     }
-    match(token);
-    if (t!=NULL)
-      t->child[1] = simple_expression();
+    else
+    {
+    }
   }
-  return t;
+  else
+  {
+    // simple statement
+    // 이거 구현하기
+    fprintf(stdout, "simple stmt\n");
+  }
+
+  return ret;
+}
+
+TreeNode * var(void)
+{ 
+  TreeNode * ret;
+  char *name;
+
+  if(token==ID)
+		name = copyString(tokenString);
+  match(ID);
+
+	if(token==LBRACKET)
+	{
+		ret = newExpNode(IdK);
+		if (ret != NULL)
+		{
+			ret->attr.name = name;
+			ret->type = Integer;
+			match(LBRACKET);
+			ret->child[0] = expression();
+			match(RBRACKET);
+		}
+	}
+	else
+	{
+		ret = newExpNode(IdK);
+		if (ret != NULL)
+		{
+			ret->attr.name = name;
+			ret->type = Integer;
+		}
+	}
+	return ret;
 }
 
 TreeNode * simple_expression(void)
-{ TreeNode * t = term();
+{ 
+  TreeNode * t = term();
   // additive expression 먼저 호출 이후에 
 
   while ((token==PLUS)||(token==MINUS))

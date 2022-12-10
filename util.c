@@ -237,9 +237,6 @@ void printTree(TreeNode *tree)
       case RepeatK:
         fprintf(listing, "Repeat\n");
         break;
-      case AssignK:
-        fprintf(listing, "Assign to: %s\n", tree->attr.name);
-        break;
       case ReadK:
         fprintf(listing, "Read: %s\n", tree->attr.name);
         break;
@@ -247,8 +244,11 @@ void printTree(TreeNode *tree)
         fprintf(listing, "Write\n");
         break;
       case ReturnK:
-        fprintf(listing, "return\n");
-        break;
+        if(tree->child[0]==NULL)
+					fprintf(listing, "Return nothing\n");
+				else
+					fprintf(listing, "Return variable\n");
+				break;
       case CompoundK:
         fprintf(listing, "compound statement\n");
         break;
@@ -292,6 +292,9 @@ void printTree(TreeNode *tree)
       case FunctionDeclare:
 				fprintf(listing, "Function Declaration, name : %s, type : %s\n", tree->attr.name, printType(tree->type));
 				break;
+      case AssignK:
+        fprintf(listing, "Assign to: %s\n", tree->attr.name);
+        break;
       default:
         fprintf(listing, "Unknown ExpNode kind\n");
         break;
@@ -299,8 +302,11 @@ void printTree(TreeNode *tree)
     }
     else
       fprintf(listing, "Unknown node kind\n");
-    for (i = 0; i < MAXCHILDREN; i++)
+    for (i = 0; i < MAXCHILDREN; i++){
+      //printSpaces();
+      //fprintf(listing,"child %d\n", i);
       printTree(tree->child[i]);
+    }
     tree = tree->sibling;
   }
   UNINDENT;

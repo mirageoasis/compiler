@@ -51,8 +51,7 @@ TODO
 함수에 들어갈 parameter 개발
 
 1. compound statement 개발
-2. local-declarations statement-list 따져보자
-3. local-declations 개발
+2. statement-list 따져보자
 4. statement-list 개발
 5. expression | coumpound_statement | selection_statement| iteration_statement | return stmt
 6. 일단 return stmt 만 개발해서 함수가 되는지 확인
@@ -205,10 +204,8 @@ TreeNode * declaration(void)
 		
     // 함수 statement부분 일단 return 부분 먼저 개발한다.
 
-    match(LCURL);
     if (t != NULL)
-			t->child[0] = compound_statement();
-		match(RCURL);
+			t->child[1] = compound_statement();
 
   }else{
     printToken(token, tokenString);
@@ -248,10 +245,7 @@ TreeNode* param_list(ExpType type){
   first = param(type);
   first_sibling_pointer = first;
   while(token == COMMA){
-    /// 여러개 있는 경우
-    // comma 맞춰주자
     match(COMMA);
-
     ExpType next_type = type_specifier(); // 다음 나오는 친구의 type 을 구해준다.
     now = param(next_type);
     if (now!=NULL) {
@@ -306,11 +300,11 @@ TreeNode * compound_statement(void){
   // 
   TreeNode *t = newStmtNode(CompoundK);
   // 괄호 맞춰주기
-  fprintf(stdout,"token type is %d\n", token);
-  
+  match(LCURL);
   fprintf(stdout,"in compound function!\n");
   t->child[0] = local_declarations();
-  //t->child[1] = statement_list();
+  t->child[1] = statement_list();
+  match(RCURL);
   // 괄호 맞춰주기
 }
 
@@ -320,7 +314,7 @@ TreeNode *local_declarations(void)
   // empty 를 잘 처리해야하는데
   TreeNode *ret = NULL;
   TreeNode *ret_sibling_pointer = NULL;
-  fprintf(stdout, "token type is! %d\n", token);
+  //fprintf(stdout, "token type is! %d\n", token);
   if (token == INT || token == VOID)
     ret = var_declarations();
   ret_sibling_pointer = ret;
@@ -395,6 +389,10 @@ TreeNode * statement_list(void)
 { 
   TreeNode *ret = NULL;
   TreeNode *ret_sibling_pointer = NULL;
+  // TODO 
+  // 완성한거 따라서 if 문에 token 추가하기
+  
+
 
   if (token == IF || token == ID || token == RETURN)
     ret = statement();
@@ -421,11 +419,20 @@ TreeNode * statement_list(void)
 }
 
 TreeNode * statement(void)
-{ TreeNode * t = NULL;
+{ 
+  // IF
+  // ID
+  // RETURN
+  // COMPOUND
+  // ITERATION
+  
+  TreeNode * t = NULL;
   switch (token) {
     case IF : t = if_stmt(); break;
     case ID : t = assign_stmt(); break;
-    case RETURN: t =  return_stmt();break;
+    case RETURN: 
+      match(RETURN);
+      t =  return_stmt();break;
     default : syntaxError("unexpected token -> ");
               printToken(token,tokenString);
               token = getToken();
@@ -437,6 +444,13 @@ TreeNode * statement(void)
 TreeNode * return_stmt(void)
 { 
   TreeNode * t = newStmtNode(ReturnK);
+  // expression
+  if (token != SEMI){
+    expression();
+  }
+
+  // 세미콜론 ; 
+  match(SEMI);
   return t;
 }
 

@@ -226,7 +226,7 @@ void printTree(TreeNode *tree)
   while (tree != NULL)
   {
     printSpaces();
-    //printf("tree is not null!\n");
+    printf("tree is not null!\n");
     if (tree->nodekind == StmtK)
     {
       switch (tree->kind.stmt)
@@ -239,7 +239,6 @@ void printTree(TreeNode *tree)
         break;
       case AssignK:
         fprintf(listing, "Assign to: %s\n", tree->attr.name);
-        //fprintf(stdout, "Assign to: %s\n", tree->attr.name);
         break;
       case ReadK:
         fprintf(listing, "Read: %s\n", tree->attr.name);
@@ -273,10 +272,22 @@ void printTree(TreeNode *tree)
         fprintf(listing, "Id: %s\n", tree->attr.name);
         break;
       case ArrayDeclare:
-					fprintf(listing, "Array Declare, name : %s, type : %s\n",tree->attr.name, printType(tree->type));
+					if (tree->IsParameter){
+            fprintf(listing, "parameter array Declare, name : %s, type : %s\n",tree->attr.name, printType(tree->type));
+            fprintf(stdout, "parameter array Declare, name : %s, type : %s\n",tree->attr.name, printType(tree->type));
+          }else{
+            fprintf(listing, "array Declare, name : %s, type : %s\n",tree->attr.name, printType(tree->type));
+            fprintf(stdout, "array Declare, name : %s, type : %s\n",tree->attr.name, printType(tree->type));
+          }
           break;
       case VarDelcare:
-					fprintf(listing, "Var Declare, name : %s, type : %s\n",tree->attr.name, printType(tree->type));
+          if (tree->IsParameter){
+            fprintf(listing, "parameter Var Declare, name : %s, type : %s\n",tree->attr.name, printType(tree->type));
+            fprintf(stdout, "parameter Var Declare, name : %s, type : %s\n",tree->attr.name, printType(tree->type));
+          }else{
+            fprintf(listing, "Var Declare, name : %s, type : %s\n",tree->attr.name, printType(tree->type));
+            fprintf(stdout, "Var Declare, name : %s, type : %s\n",tree->attr.name, printType(tree->type));
+          }
 				break;
       case FunctionDeclare:
 				fprintf(listing, "Function Declaration, name : %s, type : %s\n", tree->attr.name, printType(tree->type));

@@ -50,20 +50,22 @@ TODO
 함수를 개발
 함수에 들어갈 parameter 개발
 
-1. 함수를 먼저 개발하고 (parameter 는 없다고 가정) declare 함수에서 개발한다.
-2. parameter 를 개발
-3. compound statement 개발
-4. local-declarations statement-list 따져보자
-5. local-declations 개발
-6. statement-list 개발
-7. expression | coumpound_statement | selection_statement| iteration_statement | return stmt
-8. 일단 return stmt 만 개발해서 함수가 되는지 확인
+1. compound statement 개발
+2. local-declarations statement-list 따져보자
+3. local-declations 개발
+4. statement-list 개발
+5. expression | coumpound_statement | selection_statement| iteration_statement | return stmt
+6. 일단 return stmt 만 개발해서 함수가 되는지 확인
 
 */
 static TreeNode * declaration_list(void);
+static TreeNode * params(void);
 static TreeNode * param_list(ExpType);
 static TreeNode * param(ExpType);
-static TreeNode * params(void);
+static TreeNode * compound_statement(void);
+
+
+
 static TreeNode * declaration(void);
 static TreeNode * stmt_sequence(void);
 static TreeNode * statement(void);
@@ -138,7 +140,6 @@ TreeNode * declaration_list(void)
   return first;
 }
 
-
 TreeNode * declaration(void)
 {
 	TreeNode *t;
@@ -189,13 +190,20 @@ TreeNode * declaration(void)
 			t->attr.name = name;
 			t->type = type;
 		}
-		match(LPAREN);
+		// statement 가 없고 parameter 가 있다고 가정한다.
+    match(LPAREN);
 		// 파라미터 받는다.
     if (t != NULL)
 			t->child[0] = params();
 		match(RPAREN);
-		// statement 가 없고 parameter 가 있다고 가정한다.
-    // 함수 선언 skip
+		
+    // 함수 statement부분 일단 return 부분 먼저 개발한다.
+
+    match(LPAREN);
+    if (t != NULL)
+			t->child[0] = compound_statement();
+		match(RPAREN);
+
   }else{
     printToken(token, tokenString);
 		token = getToken();
@@ -287,6 +295,57 @@ TreeNode* param(ExpType type){
   return ret;
 }
 
+TreeNode * compound_statement(void){
+  // 일단 local declartion 개발 하자
+  // 
+
+
+}
+
+TreeNode * local_declarations(void){
+
+}
+
+TreeNode * var_declarations(void){
+  ExpType type = type_specifier();
+	char* name = copyString(tokenString);
+  TreeNode *ret;
+  // id를 맞추고
+	match(ID);
+  printf("in function variance declaration\n");
+  // id를 확인하면 다음 토큰은 
+	
+  if(token == SEMI){
+    ret = newExpNode(VarDelcare);
+		if (ret != NULL)
+		{
+			ret->attr.name = name;
+			ret->type = type;
+		}
+  }else if(token == LBRACKET){
+    ret = newExpNode(ArrayDeclare);
+		if (ret != NULL)
+		{
+			ret->attr.name = name;
+			ret->type = type;
+		}
+    //[
+		match(LBRACKET);
+    // number
+    if (ret != NULL)
+			ret->arraySize = atoi(tokenString);
+    match(NUM);
+    // ]
+    match(RBRACKET);
+    //;
+  }else{
+    printToken(token, tokenString);
+		token = getToken();
+    return NULL;
+  }
+  match(SEMI);
+  return ret;
+}
 
 TreeNode * stmt_sequence(void)
 { TreeNode * t = statement();

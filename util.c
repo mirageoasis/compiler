@@ -265,6 +265,9 @@ void printTree(TreeNode *tree)
       case IdK:
         fprintf(listing, "Id: %s\n", tree->attr.name);
         break;
+      case ArrayDeclare:
+					fprintf(listing, "Array Declare, name : %s, type : %s\n",tree->attr.name, printType(tree->type));
+          break;
       case VarDelcare:
 					fprintf(listing, "Var Declare, name : %s, type : %s\n",tree->attr.name, printType(tree->type));
 				break;

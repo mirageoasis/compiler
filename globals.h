@@ -56,6 +56,7 @@ typedef enum
    ConstK,
    IdK,
    VarDelcare,
+   ArrayDeclare,
    FunctionDeclare
 } ExpKind;
 
@@ -123,6 +124,7 @@ typedef struct treeNode
    struct treeNode *child[MAXCHILDREN];
    struct treeNode *sibling;
    int lineno;
+   int arraySize;
    NodeKind nodekind;
    union
    {

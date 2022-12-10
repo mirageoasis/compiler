@@ -134,22 +134,40 @@ TreeNode * declaration(void)
 	match(ID);
   printf("function decl\n");
   // id를 확인하면 다음 토큰은 
-	switch (token)
-	{
-	case SEMI:
-		t = newExpNode(VarDelcare);
+	
+  if(token == SEMI){
+    t = newExpNode(VarDelcare);
 		if (t != NULL)
 		{
 			t->attr.name = name;
 			t->type = type;
 		}
 		match(SEMI);
-		break;
-	default: syntaxError("unexpected token on declare statement");
-		printToken(token, tokenString);
+  }else if(token == LBRACKET){
+    t = newExpNode(ArrayDeclare);
+		if (t != NULL)
+		{
+			t->attr.name = name;
+			t->type = type;
+		}
+    //[
+		match(LBRACKET);
+    // number
+    if (t != NULL)
+			t->arraySize = atoi(tokenString);
+    match(NUM);
+    // ]
+    match(RBRACKET);
+    //;
+    match(SEMI);
+  }
+  else if(token == LPAREN){
+    // 아직 함수 PARAMETER 완성 안됨
+  }else{
+    printToken(token, tokenString);
 		token = getToken();
-		break;
-	}
+  }
+	
 	return t;
 }
 

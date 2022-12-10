@@ -239,12 +239,19 @@ void printTree(TreeNode *tree)
         break;
       case AssignK:
         fprintf(listing, "Assign to: %s\n", tree->attr.name);
+        //fprintf(stdout, "Assign to: %s\n", tree->attr.name);
         break;
       case ReadK:
         fprintf(listing, "Read: %s\n", tree->attr.name);
         break;
       case WriteK:
         fprintf(listing, "Write\n");
+        break;
+      case ReturnK:
+        fprintf(listing, "return\n");
+        break;
+      case CompoundK:
+        fprintf(listing, "compound statement\n");
         break;
       default:
         fprintf(listing, "Unknown statement kind\n");

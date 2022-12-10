@@ -48,7 +48,9 @@ typedef enum
    RepeatK,
    AssignK,
    ReadK,
-   WriteK
+   WriteK,
+   ReturnK,
+   CompoundK
 } StmtKind;
 typedef enum
 {

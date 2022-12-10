@@ -98,7 +98,7 @@ main(int argc, char *argv[])
   if (TraceParse)
   {
     fprintf(stdout, "on Tracing\n");
-    fprintf(listing, "\nSyntax tree:\n");
+    fprintf(stdout, "\nSyntax tree:\n");
     printTree(syntaxTree);
   }
 #if !NO_ANALYZE

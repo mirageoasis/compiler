@@ -125,6 +125,7 @@ typedef struct treeNode
    struct treeNode *sibling;
    int lineno;
    int arraySize;
+   int IsParameter;
    NodeKind nodekind;
    union
    {

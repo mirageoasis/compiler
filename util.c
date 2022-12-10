@@ -247,7 +247,7 @@ void printTree(TreeNode *tree)
         fprintf(listing, "Write\n");
         break;
       default:
-        fprintf(listing, "Unknown ExpNode kind\n");
+        fprintf(listing, "Unknown statement kind\n");
         break;
       }
     }
@@ -270,6 +270,9 @@ void printTree(TreeNode *tree)
           break;
       case VarDelcare:
 					fprintf(listing, "Var Declare, name : %s, type : %s\n",tree->attr.name, printType(tree->type));
+				break;
+      case FunctionDeclare:
+				fprintf(listing, "Function Declaration, name : %s, type : %s\n", tree->attr.name, printType(tree->type));
 				break;
       default:
         fprintf(listing, "Unknown ExpNode kind\n");

@@ -56,13 +56,9 @@ args_list:
 TODO
 
 함수를 개발
-함수에 들어갈 parameter 개발
-
-1. compound statement 개발
-2. statement-list 따져보자
-4. statement-list 개발
-5. expression | selection_statement| iteration_statement | return stmt
-6. 일단 return stmt 만 개발해서 함수가 되는지 확인
+args 쪽 보기
+call 함수 구현하기
+factor 에서 call 함수 구현하는게 현재 todo 이다.
 
 */
 static TreeNode * declaration_list(void);
@@ -97,8 +93,9 @@ static TreeNode * addop(TokenType token);
 static TreeNode * mulop(TokenType token);
 static TreeNode * relop(TokenType token);
 
-TreeNode * args(void);
-TreeNode * args_list(void);
+static TreeNode * call(void);
+static TreeNode * args(void);
+static TreeNode * args_list(void);
 
 static void syntaxError(char * message)
 { fprintf(listing,"\n>>> ");
@@ -545,47 +542,39 @@ TreeNode *expression(void)
   // 일단 var = expresssion 을 만든다.
   fprintf(stdout,"in expression function\n");
   fprintf(stdout,"current token %d\n", token);
-  if (token == ID)
-  {
-    char *str;
-    if(token == ID)
-      str = copyString(tokenString);
-    // 해당 토큰 삭제
-    match(ID);
-    temp = var(str);
-    if (token == ASSIGN)
-    {
-      // 할당 연산자 출현
-      if (temp != NULL && temp->nodekind == ExpK && temp->kind.exp == IdK)
-      {
-        //fprintf(stdout,"assign is going on!\n");
-        match(ASSIGN);
-        ret = newExpNode(AssignK);
-        if (ret != NULL)
-        {
-          ret->child[0] = temp;
-          ret->child[1] = expression();
-        }
-      }
-      else
-      {
-        syntaxError("plz put right value on left sign\n");
-        token = getToken();
-      }
-    }
-    else
-    {
-      fprintf(stdout, "simple expression is taking place\n");
-      ret = simple_expression(temp);
-    }
-  }
-  else
-  {
-    // simple statement
-    // 이거 구현하기
-    fprintf(stdout, "simple stmt\n");
-    ret = simple_expression(NULL);
-  }
+  TreeNode *t;
+	TreeNode *q=NULL;
+	int flag = FALSE;
+
+	if (token == ID)
+	{
+		// call 함수도 모두 고쳐야한다.
+      q = call();
+		  flag = TRUE;
+    // ASSIGN 이 아닌 경우 문제가 된다.
+	}
+
+	if (flag == TRUE && token == ASSIGN)
+	{
+		if (q != NULL && q->nodekind == ExpK && q->kind.exp == IdK)
+		{
+			match(ASSIGN);
+			t = newExpNode(AssignK);
+			if (t != NULL)
+			{
+				t->child[0] = q;
+				t->child[1] = expression();
+			}
+		}
+		else
+		{
+			syntaxError("attempt to assign to something not an lvalue\n");
+			token = getToken();
+		}
+	}
+	else
+		t = simple_expression(q);
+	return t;
 
   return ret;
 }
@@ -751,23 +740,12 @@ TreeNode *factor(TreeNode *f)
     match(NUM);
     break;
   case ID:
+  fprintf(stdout,"before var and call token is %d\n", token);
     if(token == ID)
       str = copyString(tokenString);
     
     // 토큰 matching 하고 
-    match(ID);
-    
-    if (token == LPAREN){
-      //t= newExpNode(CallK);
-      //call();
-    }else{
-      t = var(str);
-    }
-
-    // ID 있는지 찾는다.
-    // 이게 call 인지 var 인지 구분 필요 다음 token 의 종류에 따라서 구분할 필요가 있음
-    
-    
+    t = call();
     break;
   case LPAREN:
     match(LPAREN);
@@ -775,6 +753,7 @@ TreeNode *factor(TreeNode *f)
     match(RPAREN);
     break;
   default:
+    printf("unexpected token%d\n", token);
     sprintf(msg ,"unexpected token -> %s", tokenString);
     syntaxError(msg);
     printToken(token, tokenString);
@@ -783,6 +762,51 @@ TreeNode *factor(TreeNode *f)
   }
   return t;
 }
+
+TreeNode * call(void)
+{
+	TreeNode *t;
+	char *name;
+
+	if(token==ID)
+		name = copyString(tokenString);
+	match(ID);
+
+	if (token == LPAREN)
+	{
+		match(LPAREN);
+		t = newStmtNode(CallK);
+		if (t != NULL)
+		{
+			t->attr.name = name;
+			t->child[0] = args();
+		}
+		match(RPAREN);
+	}
+	else if(token==LCURL)
+	{
+		t = newExpNode(IdK);
+		if (t != NULL)
+		{
+			t->attr.name = name;
+			t->type = Integer;
+			match(LCURL);
+			t->child[0] = expression();
+			match(RCURL);
+		}
+	}
+	else
+	{
+		t = newExpNode(IdK);
+		if (t != NULL)
+		{
+			t->attr.name = name;
+			t->type = Integer;
+		}
+	}
+	return t;
+}
+
 
 TreeNode * args(void)
 {

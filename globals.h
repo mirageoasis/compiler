@@ -50,6 +50,7 @@ typedef enum
    WriteK,
    ReturnK,
    SimpK,
+   CallK,
    CompoundK
 } StmtKind;
 typedef enum
@@ -61,7 +62,6 @@ typedef enum
    VarDelcare,
    ArrayDeclare,
    FunctionDeclare,
-   CallK,
    calK
 } ExpKind;
 

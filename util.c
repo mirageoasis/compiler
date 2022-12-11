@@ -293,7 +293,7 @@ void printTree(TreeNode *tree)
 				fprintf(listing, "Function Declaration, name : %s, type : %s\n", tree->attr.name, printType(tree->type));
 				break;
       case AssignK:
-        fprintf(listing, "Assign to: %s\n", tree->attr.name);
+        fprintf(listing, "Assign to\n");
         break;
       default:
         fprintf(listing, "Unknown ExpNode kind\n");

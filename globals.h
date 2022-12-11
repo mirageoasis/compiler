@@ -49,6 +49,7 @@ typedef enum
    ReadK,
    WriteK,
    ReturnK,
+   SimpK,
    CompoundK
 } StmtKind;
 typedef enum
@@ -60,7 +61,8 @@ typedef enum
    VarDelcare,
    ArrayDeclare,
    FunctionDeclare,
-   SimpK
+   CallK,
+   calK
 } ExpKind;
 
 /* ExpType is used for type checking */

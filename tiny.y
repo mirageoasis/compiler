@@ -147,13 +147,6 @@ factor      : LPAREN exp RPAREN
 
 %%
 
-int yyerror(char * message)
-{ fprintf(listing,"Syntax error at line %d: %s\n",lineno,message);
-  fprintf(listing,"Current token: ");
-  printToken(yychar,tokenString);
-  Error = TRUE;
-  return 0;
-}
 
 /* yylex calls getToken to make Yacc/Bison output
  * compatible with ealier versions of the TINY scanner
@@ -163,9 +156,9 @@ static int yylex(void)
 
 TreeNode * parse(void)
 { 
-  printf("outofparse");
+  //printf("outofparse");
   yyparse();
-  printf("outofparse");
+  //printf("outofparse");
   return savedTree;
 }
 

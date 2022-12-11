@@ -205,6 +205,15 @@ static void printSpaces(void)
   }
 }
 
+static void printbackSpaces(void)
+{
+  int i;
+  for (i = 0; i < indentno; i++){
+    //fseek(listing, -8, SEEK_END);
+  }
+}
+
+
 char *printType(ExpType type)
 {
   if (type == Integer){
@@ -228,14 +237,14 @@ void printTree(TreeNode *tree)
   while (tree != NULL)
   {
     printSpaces();
-    printf("tree is not null!\n");
+    //fprintf(listing,"tree is not null!\n");
     if (tree->nodekind == StmtK)
     {
+      //fprintf(listing, "in stmk %d\n", tree->kind.stmt);
       switch (tree->kind.stmt)
       {
       case IfK:
         fprintf(listing, "If\n");
-        fprintf(listing, "\tsim\n");
         break;
       case RepeatK:
         fprintf(listing, "Repeat\n");
@@ -252,6 +261,10 @@ void printTree(TreeNode *tree)
 				else
 					fprintf(listing, "Return variable\n");
 				break;
+      case SimpK:
+        fprintf(listing, "Simple Expression\n");
+        fprintf(stdout, "Simple Expression\n");
+        break;
       case CompoundK:
         fprintf(listing, "Compound Statement\n");
         break;
@@ -262,16 +275,18 @@ void printTree(TreeNode *tree)
     }
     else if (tree->nodekind == ExpK)
     {
+      //fprintf(listing,"in expk %d\n", tree->kind.exp);
       switch (tree->kind.exp)
       {
       case OpK:
         switch (tree->attr.op)
         {
         case PLUS:
-          fprintf(listing, "PLUS Expression\n");
+          fprintf(listing, "Additive Expression\n");
           fprintf(stdout, "Additive Expression\n");
           break;
         case MINUS:
+          fprintf(listing, "Additive Expression\n");
           fprintf(listing, "MINUS Expression\n");
           break;
         case TIMES:
@@ -292,20 +307,55 @@ void printTree(TreeNode *tree)
         fprintf(listing, "Variable : %s\n", tree->attr.name);
         fprintf(stdout, "Variable : %s\n", tree->attr.name);
         break;
-      case SimpK:
-        fprintf(listing, "Simple Expression\n");
-        fprintf(stdout, "Simple Expression\n");
+      case calK:
+        switch (tree->attr.op)
+        {
+        case PLUS:
+          fprintf(listing, "Operator : +\n");
+          fprintf(stdout, "Additive Expression\n");
+          break;
+        case MINUS:
+          fprintf(listing, "Operator : -\n");
+          break;
+        case TIMES:
+          fprintf(listing, "Operator : *\n");
+          break;
+        case DIV:
+          fprintf(listing, "Operator : /\n");
+          break;
+        case LT:
+          fprintf(listing, "Operator : <\n");
+          break;
+        case LTE:
+          fprintf(listing, "Operator : <=\n");
+          break;
+        case GT:
+          fprintf(listing, "Operator : >\n");
+          break;
+        case GTE:
+          fprintf(listing, "Operator : >=\n");
+          break;
+        case EQ:
+          fprintf(listing, "Operator : ==\n");
+          break;
+        case NEQ:
+          fprintf(listing, "Operator : !=\n");
+          break;
+        default:
+          fprintf(listing, "in valid operator\n");
+          break;
+        }
         break;
       case ArrayDeclare:
 					if (tree->IsParameter){
             fprintf(listing, "Array Parameter : %s\n", tree->attr.name);
             printSpaces();
-            fprintf(listing, "\tType : %s\n", printType(tree->type));
+            fprintf(listing, "    Type : %s\n", printType(tree->type));
             fprintf(stdout, "parameter Var Declare : %s, type : %s\n",tree->attr.name, printType(tree->type));
           }else{
             fprintf(listing, "Array Declare : %s\n", tree->attr.name);
             printSpaces();
-            fprintf(listing, "\tType : %s\n", printType(tree->type));
+            fprintf(listing, "    Type : %s\n", printType(tree->type));
             fprintf(stdout, "Var Declare, name : %s, type : %s\n",tree->attr.name, printType(tree->type));
           }
           break;
@@ -313,19 +363,19 @@ void printTree(TreeNode *tree)
           if (tree->IsParameter){
             fprintf(listing, "Parameter : %s\n", tree->attr.name);
             printSpaces();
-            fprintf(listing, "\tType : %s\n", printType(tree->type));
+            fprintf(listing, "    Type : %s\n", printType(tree->type));
             fprintf(stdout, "parameter Var Declare : %s, type : %s\n",tree->attr.name, printType(tree->type));
           }else{
             fprintf(listing, "Variable Declare : %s\n", tree->attr.name);
             printSpaces();
-            fprintf(listing, "\tType : %s\n", printType(tree->type));
+            fprintf(listing, "    Type : %s\n", printType(tree->type));
             fprintf(stdout, "Var Declare, name : %s, type : %s\n",tree->attr.name, printType(tree->type));
           }
 				break;
       case FunctionDeclare:
 				fprintf(listing, "Function Declare : %s\n",tree->attr.name);
         printSpaces();
-        fprintf(listing, "\tType : %s\n", printType(tree->type));
+        fprintf(listing, "    Type : %s\n", printType(tree->type));
 				break;
       case AssignK:
         fprintf(listing, "Assign : =\n");
@@ -337,11 +387,9 @@ void printTree(TreeNode *tree)
     }
     else
       fprintf(listing, "Unknown node kind\n");
-    for (i = 0; i < MAXCHILDREN; i++){
-      //printSpaces();
-      //fprintf(listing,"child %d\n", i);
+    for (i = 0; i < MAXCHILDREN; i++)
       printTree(tree->child[i]);
-    }
+    
     tree = tree->sibling;
   }
   UNINDENT;

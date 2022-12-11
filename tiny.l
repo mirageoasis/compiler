@@ -101,6 +101,18 @@ TokenType getToken(void)
   return currentToken;
 }
 
+
+
+int yyerror(char const *msg)
+{
+  //fprintf(listing, "syntax error at \n");
+  //fprintf(listing, "Current token :  \n");
+  //printToken(yytext, tokenString);
+  Error = TRUE;
+  strcpy(yytext, msg);
+  //fclose(listing);
+}
+
 int yywrap()
 {
         /* actions for reaching EOF */

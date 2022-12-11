@@ -59,7 +59,8 @@ typedef enum
    AssignK,
    VarDelcare,
    ArrayDeclare,
-   FunctionDeclare
+   FunctionDeclare,
+   SimpK
 } ExpKind;
 
 /* ExpType is used for type checking */

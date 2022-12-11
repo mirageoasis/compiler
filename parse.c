@@ -70,7 +70,7 @@ static TreeNode * params(void);
 static TreeNode * param_list(ExpType);
 static TreeNode * param(ExpType);
 
-static TreeNode * compound_statement(void);
+static TreeNode * compound_stmt(void);
 static TreeNode * return_stmt(void);
 static TreeNode * var_declarations(void);
 static TreeNode * local_declarations(void);
@@ -85,7 +85,7 @@ static TreeNode * additive_expression(TreeNode *);
 static TreeNode * declaration(void);
 static TreeNode * statement(void);
 static TreeNode * selection_stmt(void);
-static TreeNode * repeat_stmt(void);
+static TreeNode * iteration_stmt(void);
 static TreeNode * assign_stmt(void);
 static TreeNode * read_stmt(void);
 static TreeNode * write_stmt(void);
@@ -93,6 +93,9 @@ static TreeNode * expression(void);
 static TreeNode * simple_expression(TreeNode *);
 static TreeNode * term(TreeNode *t);
 static TreeNode * factor(TreeNode *t);
+
+TreeNode * args(void);
+TreeNode * args_list(void);
 
 static void syntaxError(char * message)
 { fprintf(listing,"\n>>> ");
@@ -217,7 +220,7 @@ TreeNode * declaration(void)
     // 함수 statement부분 일단 return 부분 먼저 개발한다.
 
     if (t != NULL)
-			t->child[1] = compound_statement();
+			t->child[1] = compound_stmt();
     
 
   }else{
@@ -308,7 +311,7 @@ TreeNode* param(ExpType type){
   return ret;
 }
 
-TreeNode * compound_statement(void){
+TreeNode * compound_stmt(void){
   // 일단 local declartion 개발 하자
   // 
   TreeNode *ret = newStmtNode(CompoundK);
@@ -433,24 +436,29 @@ TreeNode * statement_list(void)
 
 TreeNode * statement(void)
 { 
-  // IF
-  // ID
-  // RETURN
+
   // COMPOUND
   // ITERATION
   
   TreeNode * t = NULL;
   switch (token) {
+    case ID : 
+      t = expression_stmt(); 
+      break;
+    case LCURL:
+      t = compound_stmt();
+      break;
     case IF : 
       t = selection_stmt(); 
       break;
-    case ID : 
-      t = expression_stmt(); 
+    case WHILE : 
+      t = iteration_stmt(); 
       break;
     case RETURN: 
       match(RETURN);
       t =  return_stmt();
       break;
+    
     default : syntaxError("unexpected token -> ");
               printToken(token,tokenString);
               token = getToken();
@@ -477,7 +485,7 @@ TreeNode * return_stmt(void)
   TreeNode * t = newStmtNode(ReturnK);
   // expression
   if (token != SEMI){
-    expression();
+    t->child[0] = expression();
   }
 
   // 세미콜론 ; 
@@ -488,7 +496,9 @@ TreeNode * return_stmt(void)
 TreeNode * selection_stmt(void)
 { TreeNode * t = newStmtNode(IfK);
   match(IF);
+  match(LPAREN);
   if (t!=NULL) t->child[0] = expression();
+  match(RPAREN);
   if (t!=NULL) t->child[1] = statement();
   if (token==ELSE) {
     match(ELSE);
@@ -497,22 +507,19 @@ TreeNode * selection_stmt(void)
   return t;
 }
 
-TreeNode * repeat_stmt(void)
+TreeNode * iteration_stmt(void)
 { TreeNode * t = newStmtNode(RepeatK);
-  //match(REPEAT);
-  if (t!=NULL) t->child[0] = statement();
+  // while (
+  match(WHILE);
+  match(LPAREN);
+  // expression
+  if (t!=NULL) 
+    t->child[0] = expression();
+  // )
+  match(RPAREN);
+  if (t!=NULL) 
+    t->child[1] = statement();
   //match(UNTIL);
-  if (t!=NULL) t->child[1] = expression();
-  return t;
-}
-
-TreeNode * assign_stmt(void)
-{ TreeNode * t = newStmtNode(AssignK);
-  if ((t!=NULL) && (token==ID))
-    t->attr.name = copyString(tokenString);
-  match(ID);
-  match(ASSIGN);
-  if (t!=NULL) t->child[0] = expression();
   return t;
 }
 
@@ -532,13 +539,12 @@ TreeNode *expression(void)
       // 할당 연산자 출현
       if (temp != NULL && temp->nodekind == ExpK && temp->kind.exp == IdK)
       {
-        fprintf(stdout,"assign is going on!\n");
+        //fprintf(stdout,"assign is going on!\n");
         match(ASSIGN);
         ret = newExpNode(AssignK);
         if (ret != NULL)
         {
           ret->child[0] = temp;
-          printf("%s\n", temp->attr.name);
           ret->child[1] = expression();
         }
       }
@@ -550,7 +556,7 @@ TreeNode *expression(void)
     }
     else
     {
-      fprintf(stdout, "it is not assign so simple expression is taking place\n");
+      fprintf(stdout, "simple expression is taking place\n");
       ret = simple_expression(temp);
     }
   }
@@ -571,6 +577,10 @@ TreeNode * simple_expression(TreeNode *f){
   //fprintf(stdout,"in function simple_expression\n");
   TreeNode * ret = additive_expression(f);
 
+  if (ret == NULL){
+    ret->kind.exp = SimpK;
+  }
+
   int flag = FALSE;
 
   TokenType temp[6] = {LT ,LTE ,GT ,GTE ,EQ ,NEQ};
@@ -589,6 +599,7 @@ TreeNode * simple_expression(TreeNode *f){
     ret = newExpNode(OpK);
     if (ret != NULL){
       ret->child[0] = back;
+      // operator 추가해야할꺼 같음
       ret->child[1] = additive_expression(NULL);
       ret->attr.op = prev_token;
     }
@@ -621,7 +632,7 @@ TreeNode * var(void)
 	}
 	else
 	{
-    fprintf(stdout,"current name is %s\n", name);
+    //fprintf(stdout,"current name is %s\n", name);
 		ret = newExpNode(IdK);
 		if (ret != NULL)
 		{
@@ -717,7 +728,6 @@ TreeNode *factor(TreeNode *f)
   return t;
 }
 
-
 TreeNode * args(void)
 {
 	if (token == RPAREN)
@@ -731,14 +741,14 @@ TreeNode * args_list(void)
 	TreeNode * t;
 	TreeNode * p;
 
-	t = expr();
+	t = expression();
 	p = t;
 	if (t != NULL)
 	{
 		while (token == COMMA)
 		{
 			match(COMMA);
-			TreeNode * q = expr();
+			TreeNode * q = expression();
 			if (q != NULL) {
 				if (t == NULL) t = p = q;
 				else /* now p cannot be NULL either */
@@ -751,6 +761,7 @@ TreeNode * args_list(void)
 	}
 	return t;
 }
+
 
 /****************************************/
 /* the primary function of the parser   */

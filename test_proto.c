@@ -1,7 +1,8 @@
 int a;
 
-int main(int a, int b){
-    int a;
-    a = a+1;
-    return 1;
+void main(int arg){
+	int a;
+    while(a){
+        print(a);
+    }
 }

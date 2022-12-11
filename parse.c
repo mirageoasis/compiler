@@ -325,7 +325,7 @@ TreeNode * compound_stmt(void){
   // 
   TreeNode *ret = newStmtNode(CompoundK);
   // 괄호 맞춰주기
-  fprintf(stdout,"in compound function!\n");
+  fprintf(stdout,"in compound statement function!\n");
   match(LCURL);
   ret->child[0] = local_declarations();
   ret->child[1] = statement_list();
@@ -419,12 +419,12 @@ TreeNode * statement_list(void)
   // TODO 
   // 완성한거 따라서 if 문에 token 추가하기
   
-  if (token == IF || token == ID || token == RETURN)
+  if (token == IF || token == ID || token == RETURN || token == WHILE)
     ret = statement();
   ret_sibling_pointer = ret;
   if (ret != NULL)
   {
-    while (token == IF || token == ID || token == RETURN)
+    while (token == IF || token == ID || token == RETURN || token == WHILE)
     {
       TreeNode *q;
       q = statement();
@@ -446,9 +446,9 @@ TreeNode * statement_list(void)
 TreeNode * statement(void)
 { 
 
-  // COMPOUND
-  // ITERATION
-  
+  fprintf(stdout, "in statement function\n"); 
+  fprintf(stdout, "%s\n", tokenString);  
+  DTOKEN(token)
   TreeNode * t = NULL;
   char msg[100];
   switch (token) {
@@ -521,6 +521,7 @@ TreeNode * selection_stmt(void)
 
 TreeNode * iteration_stmt(void)
 { TreeNode * t = newStmtNode(RepeatK);
+  fprintf(stdout, "in iteration stmt\n");
   // while (
   match(WHILE);
   match(LPAREN);
@@ -586,8 +587,7 @@ TreeNode * simple_expression(TreeNode *f){
   TreeNode * ret = additive_expression(f);
 
   if (ret == NULL){
-    ret->nodekind = StmtK;
-    ret->kind.stmt = SimpK;
+    fprintf(stdout,"null\n");
   }
 
   int flag = FALSE;

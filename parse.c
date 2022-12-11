@@ -113,12 +113,14 @@ static void syntaxError(char * message)
 
 static void match(TokenType expected)
 { 
+  char msg[100];
   if (token == expected){
     token = getToken();
   }
   else {
-    fprintf(stdout, "%d %d\n", token, expected);
-    syntaxError("unexpected token -> ");
+    // 여기가 1번 예제 걸리는 곳
+    sprintf(msg ,"unexpected token -> %s", tokenString);
+    syntaxError(msg);
     printToken(token,tokenString);
     fprintf(listing,"      ");
   }
@@ -450,6 +452,7 @@ TreeNode * statement(void)
   // ITERATION
   
   TreeNode * t = NULL;
+  char msg[100];
   switch (token) {
     case ID : 
       t = expression_stmt(); 
@@ -468,7 +471,9 @@ TreeNode * statement(void)
       t =  return_stmt();
       break;
     
-    default : syntaxError("unexpected token -> ");
+    default : 
+              sprintf(msg ,"unexpected token -> %s", tokenString);
+              syntaxError(msg);
               printToken(token,tokenString);
               token = getToken();
               break;
@@ -727,6 +732,7 @@ TreeNode *factor(TreeNode *f)
 {
   fprintf(stdout,"in function factor!\n");
   // call 구현 안함
+  char msg[100];
   DTOKEN(token)
   if (f != NULL)
     return f;
@@ -768,7 +774,8 @@ TreeNode *factor(TreeNode *f)
     match(RPAREN);
     break;
   default:
-    syntaxError("unexpected token -> ");
+    sprintf(msg ,"unexpected token -> %s", tokenString);
+    syntaxError(msg);
     printToken(token, tokenString);
     token = getToken();
     break;

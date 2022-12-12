@@ -1,31 +1,25 @@
 CC = gcc
 
-CFLAGS = 
+CFLAGS = -lfl
 
-OBJS = main.o util.o lex.yy.o tiny.tab.o
+OBJS = main.o util.o lex.yy.o parse.o
 
 hw2_binary: $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o hw2_binary
 
-main.o: main.c globals.h util.h
+main.o: main.c globals.h util.h scan.h parse.h
 	$(CC) $(CFLAGS) -c main.c
 
 util.o: util.c util.h globals.h
 	$(CC) $(CFLAGS) -c util.c
 
-lex.yy.c: tiny.l globals.h
-	flex tiny.l
+parse.o: parse.c parse.h scan.h globals.h util.h
+	$(CC) $(CFLAGS) -c parse.c
 
-lex.yy.o: lex.yy.c
+lex.yy.o: tiny.l scan.h util.h globals.h
+	flex -o lex.yy.c tiny.l
 	$(CC) $(CFLAGS) -c lex.yy.c
-
-tiny.tab.c: tiny.y globals.h
-	bison tiny.y
-
-tiny.tab.o: tiny.tab.c
-	$(CC) $(CFLAGS) -c tiny.tab.c
 
 clean:
 	-rm hw2_binary
 	-rm $(OBJS)
-	-rm lex.yy.c

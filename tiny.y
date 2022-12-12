@@ -12,16 +12,16 @@
 #include "scan.h"
 #include "parse.h"
 
-#define YYTOKENTYPE
 #define YYSTYPE TreeNode *
 static char * savedName; /* for use in assignments */
 static int savedLineNo;  /* ditto */
 static TreeNode * savedTree; /* stores syntax tree for later return */
-
+static int yylex(void);
+int yyerror(char* message);
 %}
 
 %token IF ELSE INT RETURN VOID WHILE
-%token ID NUM ID_ERROR
+%token ID NUM ID_ERROR COMMENT_ERROR
 %token PLUS MINUS TIMES DIV
 %token LT LTE GT GTE EQ NEQ
 %token ASSIGN SEMI COMMA
@@ -45,10 +45,7 @@ stmt_seq    : stmt_seq SEMI stmt
             | stmt  { $$ = $1; }
             ;
 stmt        : if_stmt { $$ = $1; }
-            | repeat_stmt { $$ = $1; }
             | assign_stmt { $$ = $1; }
-            | read_stmt { $$ = $1; }
-            | write_stmt { $$ = $1; }
             | error  { $$ = NULL; }
             ;
 if_stmt     : IF LPAREN exp RPAREN stmt_seq
@@ -63,12 +60,14 @@ if_stmt     : IF LPAREN exp RPAREN stmt_seq
                    $$->child[2] = $6;
                  }
             ;
+/*
 repeat_stmt : REPEAT stmt_seq UNTIL exp
                  { $$ = newStmtNode(RepeatK);
                    $$->child[0] = $2;
                    $$->child[1] = $4;
                  }
             ;
+*/
 assign_stmt : ID { savedName = copyString(tokenString);
                    savedLineNo = lineno; }
               ASSIGN exp
@@ -78,6 +77,7 @@ assign_stmt : ID { savedName = copyString(tokenString);
                    $$->lineno = savedLineNo;
                  }
             ;
+/*
 read_stmt   : READ ID
                  { $$ = newStmtNode(ReadK);
                    $$->attr.name =
@@ -89,6 +89,7 @@ write_stmt  : WRITE exp
                    $$->child[0] = $2;
                  }
             ;
+*/
 exp         : simple_exp LT simple_exp 
                  { $$ = newExpNode(OpK);
                    $$->child[0] = $1;
@@ -146,13 +147,6 @@ factor      : LPAREN exp RPAREN
 
 %%
 
-int yyerror(char * message)
-{ fprintf(listing,"Syntax error at line %d: %s\n",lineno,message);
-  fprintf(listing,"Current token: ");
-  printToken(yychar,tokenString);
-  Error = TRUE;
-  return 0;
-}
 
 /* yylex calls getToken to make Yacc/Bison output
  * compatible with ealier versions of the TINY scanner
@@ -161,7 +155,10 @@ static int yylex(void)
 { return getToken(); }
 
 TreeNode * parse(void)
-{ yyparse();
+{ 
+  //printf("outofparse");
+  yyparse();
+  //printf("outofparse");
   return savedTree;
 }
 

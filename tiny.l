@@ -26,6 +26,7 @@ newline     \n
 whitespace  [ \t]+
 
 %%
+%lalr-parser
 
 "if"            {return IF;}
 "else"          {return ELSE;}
@@ -92,6 +93,7 @@ TokenType getToken(void)
   }
   currentToken = yylex();
   strncpy(tokenString,yytext,MAXTOKENLEN);
+  // 공백
   if (TraceScan) {
     fprintf(listing,"\t%d\t\t\t",lineno);
     printToken(currentToken,tokenString);
@@ -99,12 +101,19 @@ TokenType getToken(void)
   return currentToken;
 }
 
+
+
+int yyerror(char const *msg)
+{
+  //fprintf(listing, "syntax error at \n");
+  //fprintf(listing, "Current token :  \n");
+  //printToken(yytext, tokenString);
+  Error = TRUE;
+  strcpy(yytext, msg);
+  //fclose(listing);
+}
+
 int yywrap()
 {
         /* actions for reaching EOF */
-}
-
-void yyerror(char const *msg)
-{
-        strcpy(yytext, msg);
 }

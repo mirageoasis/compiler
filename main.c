@@ -39,8 +39,8 @@ FILE *code;
 
 /* allocate and set tracing flags */
 int EchoSource = FALSE;
-int TraceScan = TRUE;
-int TraceParse = FALSE;
+int TraceScan = FALSE;
+int TraceParse = TRUE;
 int TraceAnalyze = FALSE;
 int TraceCode = FALSE;
 
@@ -87,9 +87,9 @@ main(int argc, char *argv[])
 #endif
 
   // listing 을 고치면 파일에 쓰는게 가능하다.
-  //fprintf(listing, "\nTINY COMPILATION: %s\n", pgm);
-  fprintf(listing, "line number\t\t\ttoken\t\t\tlexeme\n");
-  fprintf(listing, "-------------------------------------------------------------------------------\n");
+  fprintf(listing, "\nTINY COMPILATION: %s\n", pgm);
+  //fprintf(listing, "line number\t\t\ttoken\t\t\tlexeme\n");
+  //fprintf(listing, "-------------------------------------------------------------------------------\n");
   // 위의 형식 맞춰주기
 #if NO_PARSE
   while (getToken() != ENDFILE);
@@ -97,8 +97,12 @@ main(int argc, char *argv[])
   syntaxTree = parse();
   if (TraceParse)
   {
+    //fprintf(stdout, "on Tracing\n");
+    if(Error == TRUE)
+      listing = fopen(file_name, "a");
     fprintf(listing, "\nSyntax tree:\n");
-    printTree(syntaxTree);
+    if(Error == FALSE)
+      printTree(syntaxTree);
   }
 #if !NO_ANALYZE
   if (!Error)

@@ -303,7 +303,13 @@ void printTree(TreeNode *tree)
         }
         break;
       case ConstK:
-        fprintf(listing, "Constant : %d\n", tree->attr.val);
+        if(tree->arraySize){
+          fprintf(listing, "Array Size : %d\n", tree->arraySize);  
+        }else{
+          fprintf(listing, "Constant : %d\n", tree->attr.val);
+        }
+
+
         fprintf(stdout, "Constant : %d\n", tree->attr.val);
         break;
       case IdK:
@@ -315,7 +321,7 @@ void printTree(TreeNode *tree)
         {
         case PLUS:
           fprintf(listing, "Operator : +\n");
-          fprintf(stdout, "Additive Expression\n");
+          //fprintf(stdout, "Additive Expression\n");
           break;
         case MINUS:
           fprintf(listing, "Operator : -\n");

@@ -99,13 +99,13 @@ static TreeNode * args_list(void);
 
 static void syntaxError(char * message)
 { fprintf(listing,"\n>>> ");
-  fprintf(listing,"Syntax error at line %d: %s",lineno,message);
-  
-  if (Error == FALSE){
-    fclose(listing);
-    Error = TRUE;
-  }
-  
+  fprintf(stdout, "print error occured!\n");
+  fprintf(listing,"Syntax error at line %d: %s\n",lineno,message);
+  fprintf(listing, "\nSyntax tree:\n");
+
+  fclose(listing);
+  exit(-1);
+  Error = TRUE;
 }
 
 static void match(TokenType expected)
@@ -117,6 +117,7 @@ static void match(TokenType expected)
   else {
     // 여기가 1번 예제 걸리는 곳
     sprintf(msg ,"unexpected token -> %s", tokenString);
+    fprintf(stdout, "unexpected token -> %s", tokenString);
     syntaxError(msg);
     printToken(token,tokenString);
     fprintf(listing,"      ");
@@ -170,6 +171,19 @@ TreeNode * declaration_list(void)
   return first;
 }
 
+TreeNode* array_size(TreeNode *t){
+  
+  if (t == NULL)
+    return NULL;
+	
+  TreeNode *ret = newExpNode(ConstK);
+  ret->arraySize = atoi(tokenString);
+  
+  match(NUM);
+  
+  return ret;
+}
+
 TreeNode * declaration(void)
 {
 	TreeNode *t;
@@ -202,9 +216,7 @@ TreeNode * declaration(void)
     //[
 		match(LBRACKET);
     // number
-    if (t != NULL)
-			t->arraySize = atoi(tokenString);
-    match(NUM);
+    t->child[0] = array_size(t);
     // ]
     match(RBRACKET);
     //;
@@ -418,29 +430,27 @@ TreeNode * statement_list(void)
   TreeNode *ret_sibling_pointer = NULL;
   // TODO 
   // 완성한거 따라서 if 문에 token 추가하기
-  
-  if (token == IF || token == ID || token == RETURN || token == WHILE)
-    ret = statement();
-  ret_sibling_pointer = ret;
-  if (ret != NULL)
-  {
-    while (token == IF || token == ID || token == RETURN || token == WHILE)
-    {
-      TreeNode *q;
-      q = statement();
-      if (q == NULL)
-        break;
 
-      if (ret == NULL)
-        ret = ret_sibling_pointer = q;
-      else /* now p cannot be NULL either */
-      {
-        ret_sibling_pointer->sibling = q;
-        ret_sibling_pointer = q;
-      }
-    }
-  }
-  return ret;
+
+	if (token == RCURL)
+		return NULL;
+	ret = statement();
+	ret_sibling_pointer = ret;
+	while (token != RCURL)
+	{
+		TreeNode * q;
+		q = statement();
+		if (q != NULL) {
+			if (ret == NULL) ret = ret_sibling_pointer = q;
+			else /* now p cannot be NULL either */
+			{
+				ret_sibling_pointer->sibling = q;
+				ret_sibling_pointer = q;
+			}
+		}
+	}
+	
+	return ret;
 }
 
 TreeNode * statement(void)
@@ -452,7 +462,16 @@ TreeNode * statement(void)
   TreeNode * t = NULL;
   char msg[100];
   switch (token) {
-    case ID : 
+    case ID :
+      t = expression_stmt(); 
+      break;
+    case LPAREN:
+      t = expression_stmt(); 
+      break;
+	  case NUM:
+      t = expression_stmt(); 
+      break;
+	  case SEMI: 
       t = expression_stmt(); 
       break;
     case LCURL:
@@ -481,7 +500,7 @@ TreeNode * statement(void)
 
 TreeNode * expression_stmt(void){
   TreeNode *ret = NULL;
-	
+  fprintf(stdout, "in expression statement function!\n");
 	if (token == SEMI)
 		match(SEMI);
 	else if (token != RCURL)
@@ -583,7 +602,7 @@ TreeNode *expression(void)
 
 
 TreeNode * simple_expression(TreeNode *f){
-  //fprintf(stdout,"in function simple_expression\n");
+  fprintf(stdout,"in function simple_expression\n");
   TreeNode * ret = additive_expression(f);
 
   if (ret == NULL){
@@ -653,7 +672,7 @@ TreeNode * var(char * name)
 TreeNode *additive_expression(TreeNode *f)
 {
   TreeNode *t = term(f);
-  //fprintf(stdout,"in function additive expression\n");
+  fprintf(stdout,"in function additive expression\n");
   // additive expression 먼저 호출 이후에
   // 이거 수정 필요함
   if (t != NULL)
@@ -783,16 +802,16 @@ TreeNode * call(void)
 		}
 		match(RPAREN);
 	}
-	else if(token==LCURL)
+	else if(token==LBRACKET)
 	{
 		t = newExpNode(IdK);
 		if (t != NULL)
 		{
 			t->attr.name = name;
 			t->type = Integer;
-			match(LCURL);
+			match(LBRACKET);
 			t->child[0] = expression();
-			match(RCURL);
+			match(RBRACKET);
 		}
 	}
 	else

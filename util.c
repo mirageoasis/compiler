@@ -263,7 +263,7 @@ void printTree(TreeNode *tree)
 				break;
       case SimpK:
         fprintf(listing, "Simple Expression\n");
-        fprintf(stdout, "Simple Expression\n");
+        //fprintf(stdout, "Simple Expression\n");
         break;
       case CompoundK:
         fprintf(listing, "Compound Statement\n");
@@ -309,11 +309,11 @@ void printTree(TreeNode *tree)
         }
 
 
-        fprintf(stdout, "Constant : %d\n", tree->attr.val);
+        //fprintf(stdout, "Constant : %d\n", tree->attr.val);
         break;
       case IdK:
         fprintf(listing, "Variable : %s\n", tree->attr.name);
-        fprintf(stdout, "Variable : %s\n", tree->attr.name);
+        //fprintf(stdout, "Variable : %s\n", tree->attr.name);
         break;
       case calK:
         switch (tree->attr.op)
@@ -359,12 +359,12 @@ void printTree(TreeNode *tree)
             fprintf(listing, "Array Parameter : %s\n", tree->attr.name);
             printSpaces();
             fprintf(listing, "    Type : %s\n", printType(tree->type));
-            fprintf(stdout, "parameter Var Declare : %s, type : %s\n",tree->attr.name, printType(tree->type));
+            //fprintf(stdout, "parameter Var Declare : %s, type : %s\n",tree->attr.name, printType(tree->type));
           }else{
             fprintf(listing, "Array Declare : %s\n", tree->attr.name);
             printSpaces();
             fprintf(listing, "    Type : %s\n", printType(tree->type));
-            fprintf(stdout, "Var Declare, name : %s, type : %s\n",tree->attr.name, printType(tree->type));
+            //fprintf(stdout, "Var Declare, name : %s, type : %s\n",tree->attr.name, printType(tree->type));
           }
           break;
       case VarDelcare:
@@ -372,12 +372,12 @@ void printTree(TreeNode *tree)
             fprintf(listing, "Parameter : %s\n", tree->attr.name);
             printSpaces();
             fprintf(listing, "    Type : %s\n", printType(tree->type));
-            fprintf(stdout, "parameter Var Declare : %s, type : %s\n",tree->attr.name, printType(tree->type));
+            //fprintf(stdout, "parameter Var Declare : %s, type : %s\n",tree->attr.name, printType(tree->type));
           }else{
             fprintf(listing, "Variable Declare : %s\n", tree->attr.name);
             printSpaces();
             fprintf(listing, "    Type : %s\n", printType(tree->type));
-            fprintf(stdout, "Var Declare, name : %s, type : %s\n",tree->attr.name, printType(tree->type));
+            //fprintf(stdout, "Var Declare, name : %s, type : %s\n",tree->attr.name, printType(tree->type));
           }
 				break;
       case FunctionDeclare:

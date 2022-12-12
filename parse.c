@@ -10,12 +10,12 @@
 #include "scan.h"
 #include "parse.h"
 
-#define DEBUG
+#define DEBUGx
 
 #ifdef DEBUG
   #define DTOKEN(token) fprintf(stdout, "currnet token is %d\n", token);
 #else
-  #define DTOKEN
+  #define DTOKEN(token) 
 #endif
 
 static TokenType token; /* holds current token */
@@ -99,7 +99,7 @@ static TreeNode * args_list(void);
 
 static void syntaxError(char * message)
 { fprintf(listing,"\n>>> ");
-  fprintf(stdout, "print error occured!\n");
+  //fprintf(stdout, "print error occured!\n");
   fprintf(listing,"Syntax error at line %d: %s\n",lineno,message);
   fprintf(listing, "\nSyntax tree:\n");
 
@@ -117,7 +117,7 @@ static void match(TokenType expected)
   else {
     // 여기가 1번 예제 걸리는 곳
     sprintf(msg ,"unexpected token -> %s", tokenString);
-    fprintf(stdout, "unexpected token -> %s", tokenString);
+    //fprintf(stdout, "unexpected token -> %s", tokenString);
     syntaxError(msg);
     printToken(token,tokenString);
     fprintf(listing,"      ");
@@ -223,7 +223,7 @@ TreeNode * declaration(void)
   }
   else if(token == LPAREN){
     t = newExpNode(FunctionDeclare);
-    printf("function in declartion function\n");
+    //printf("function in declartion function\n");
 		if (t != NULL)
 		{
 			t->attr.name = name;
@@ -492,7 +492,7 @@ TreeNode * statement(void)
 
 TreeNode * expression_stmt(void){
   TreeNode *ret = NULL;
-  fprintf(stdout, "in expression statement function!\n");
+  //fprintf(stdout, "in expression statement function!\n");
 	if (token == SEMI)
 		match(SEMI);
 	else if (token != RCURL)
@@ -531,7 +531,7 @@ TreeNode * selection_stmt(void)
 
 TreeNode * iteration_stmt(void)
 { TreeNode * t = newStmtNode(RepeatK);
-  fprintf(stdout, "in iteration stmt\n");
+  //fprintf(stdout, "in iteration stmt\n");
   // (
   match(LPAREN);
   // expression
@@ -549,8 +549,8 @@ TreeNode *expression(void)
 {
   TreeNode *temp = NULL;
   // 일단 var = expresssion 을 만든다.
-  fprintf(stdout,"in expression function\n");
-  fprintf(stdout,"current token %d\n", token);
+  //fprintf(stdout,"in expression function\n");
+  //fprintf(stdout,"current token %d\n", token);
   TreeNode *t;
 	TreeNode *q=NULL;
 	int flag = FALSE;
@@ -589,11 +589,11 @@ TreeNode *expression(void)
 
 
 TreeNode * simple_expression(TreeNode *f){
-  fprintf(stdout,"in function simple_expression\n");
+  //fprintf(stdout,"in function simple_expression\n");
   TreeNode * ret = additive_expression(f);
 
   if (ret == NULL){
-    fprintf(stdout,"null\n");
+    //fprintf(stdout,"null\n");
   }
 
   int flag = FALSE;
@@ -627,7 +627,7 @@ TreeNode * simple_expression(TreeNode *f){
 TreeNode * var(char * name)
 { 
   TreeNode * ret;
-  fprintf(stdout, "in function var!\n");
+  //fprintf(stdout, "in function var!\n");
   DTOKEN(token)
   // 여기는 이름을 할당해주지 못한다.
 
@@ -659,7 +659,7 @@ TreeNode * var(char * name)
 TreeNode *additive_expression(TreeNode *f)
 {
   TreeNode *t = term(f);
-  fprintf(stdout,"in function additive expression\n");
+  //fprintf(stdout,"in function additive expression\n");
   // additive expression 먼저 호출 이후에
   // 이거 수정 필요함
   if (t != NULL)
@@ -725,13 +725,13 @@ TreeNode *term(TreeNode *f)
 
 TreeNode *factor(TreeNode *f)
 {
-  fprintf(stdout,"in function factor!\n");
+  //fprintf(stdout,"in function factor!\n");
   // call 구현 안함
   char msg[100];
   DTOKEN(token)
   if (f != NULL)
     return f;
-  fprintf(stdout,"f is not null!\n");
+  //fprintf(stdout,"f is not null!\n");
   TreeNode *t = NULL;
   char *str;
   switch (token)
@@ -758,7 +758,7 @@ TreeNode *factor(TreeNode *f)
     match(RPAREN);
     break;
   default:
-    printf("unexpected token%d\n", token);
+    //printf("unexpected token%d\n", token);
     sprintf(msg ,"unexpected token -> %s", tokenString);
     syntaxError(msg);
     printToken(token, tokenString);

@@ -97,7 +97,7 @@ main(int argc, char *argv[])
   syntaxTree = parse();
   if (TraceParse)
   {
-    fprintf(stdout, "on Tracing\n");
+    //fprintf(stdout, "on Tracing\n");
     if(Error == TRUE)
       listing = fopen(file_name, "a");
     fprintf(listing, "\nSyntax tree:\n");

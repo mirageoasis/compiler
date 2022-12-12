@@ -406,9 +406,7 @@ TreeNode * var_declarations(void){
     //[
 		match(LBRACKET);
     // number
-    if (ret != NULL)
-			ret->arraySize = atoi(tokenString);
-    match(NUM);
+    ret->child[0] = array_size(ret);
     // ]
     match(RBRACKET);
     match(SEMI);

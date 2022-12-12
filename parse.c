@@ -727,6 +727,7 @@ TreeNode *term(TreeNode *f)
         p->child[0] = t;
         p->attr.op = token;
         t = p;
+        t->child[1] = mulop(token);
         match(token);
         p->child[1] = factor(NULL);
       }

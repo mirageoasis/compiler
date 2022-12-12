@@ -286,11 +286,10 @@ void printTree(TreeNode *tree)
         {
         case PLUS:
           fprintf(listing, "Additive Expression\n");
-          fprintf(stdout, "Additive Expression\n");
           break;
         case MINUS:
           fprintf(listing, "Additive Expression\n");
-          fprintf(listing, "MINUS Expression\n");
+          //fprintf(listing, "MINUS Expression\n");
           break;
         case TIMES:
           fprintf(listing, "Mulop Expression\n");

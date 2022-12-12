@@ -141,7 +141,6 @@ ExpType type_specifier(void)
   return ret;
 }
 
-
 TreeNode * declaration_list(void)
 {
 	TreeNode *first;
@@ -152,13 +151,13 @@ TreeNode * declaration_list(void)
   while(token != ENDFILE){
     now = declaration();
     if (now!=NULL){
-      printf("not null\n");
+      //printf("not null\n");
     }
     if (now!=NULL) {
       if (first==NULL)
       {
         first = first_sibling_pointer = now;
-        fprintf(stdout, "error has occured\n");
+        //fprintf(stdout, "error has occured\n");
       }
       else
       { 
@@ -194,7 +193,7 @@ TreeNode * declaration(void)
 	name = copyString(tokenString);
   // id를 맞추고
 	match(ID);
-  printf("in function declaration\n");
+  //printf("in function declaration\n");
   // id를 확인하면 다음 토큰은 
 	
   if(token == SEMI){
@@ -244,6 +243,7 @@ TreeNode * declaration(void)
     
 
   }else{
+    syntaxError("error token in declare\n");
     printToken(token, tokenString);
 		token = getToken();
   }
@@ -257,13 +257,8 @@ TreeNode* params(void){
   ExpType type;
   //printf("in params function\n");
   type = type_specifier();
-  // 
   if (type == Void && token == RPAREN){
     // parameter 가 없는 케이스
-    //printf("no parameter!\n");
-    //ret = newExpNode(VarDelcare);
-    //ret->IsParameter = TRUE;
-    //ret->type = Void;
     ret = NULL;
   }else{
     //printf("yes parameter!\n");
@@ -294,7 +289,6 @@ TreeNode* param_list(ExpType type){
       else
       { 
         /// 형제의 위치로 이동하는 상황
-        //printf("has sibling!\n");
         first_sibling_pointer->sibling = now;
         first_sibling_pointer = now;
       }
@@ -308,7 +302,6 @@ TreeNode* param(ExpType type){
   // parameter 함수 선언하고 // semicolon 있는지 확인
   char *name = copyString(tokenString);// id 이름 베끼고
   match(ID);
-  //printf("in param function!\n");
   // id 까지는 동일
   
   if (token == LBRACKET)
@@ -337,11 +330,10 @@ TreeNode * compound_stmt(void){
   // 
   TreeNode *ret = newStmtNode(CompoundK);
   // 괄호 맞춰주기
-  fprintf(stdout,"in compound statement function!\n");
+  //fprintf(stdout,"in compound statement function!\n");
   match(LCURL);
   ret->child[0] = local_declarations();
   ret->child[1] = statement_list();
-  
   match(RCURL);
   // 괄호 맞춰주기
   return ret;
@@ -410,7 +402,7 @@ TreeNode * var_declarations(void){
     // ]
     match(RBRACKET);
     match(SEMI);
-    fprintf(stdout, "배열 선언\n");
+    //fprintf(stdout, "배열 선언\n");
     //;
   }else{
     printToken(token, tokenString);
@@ -454,8 +446,8 @@ TreeNode * statement_list(void)
 TreeNode * statement(void)
 { 
 
-  fprintf(stdout, "in statement function\n"); 
-  fprintf(stdout, "%s\n", tokenString);  
+  //fprintf(stdout, "in statement function\n"); 
+  //fprintf(stdout, "%s\n", tokenString);  
   DTOKEN(token)
   TreeNode * t = NULL;
   char msg[100];
@@ -475,10 +467,12 @@ TreeNode * statement(void)
     case LCURL:
       t = compound_stmt();
       break;
-    case IF : 
+    case IF :
+      match(IF);
       t = selection_stmt(); 
       break;
-    case WHILE : 
+    case WHILE :
+      match(WHILE);
       t = iteration_stmt(); 
       break;
     case RETURN: 
@@ -524,7 +518,6 @@ TreeNode * return_stmt(void)
 
 TreeNode * selection_stmt(void)
 { TreeNode * t = newStmtNode(IfK);
-  match(IF);
   match(LPAREN);
   if (t!=NULL) t->child[0] = expression();
   match(RPAREN);
@@ -539,8 +532,7 @@ TreeNode * selection_stmt(void)
 TreeNode * iteration_stmt(void)
 { TreeNode * t = newStmtNode(RepeatK);
   fprintf(stdout, "in iteration stmt\n");
-  // while (
-  match(WHILE);
+  // (
   match(LPAREN);
   // expression
   if (t!=NULL) 

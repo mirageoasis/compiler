@@ -269,7 +269,7 @@ void printTree(TreeNode *tree)
         fprintf(listing, "Compound Statement\n");
         break;
       case CallK:
-        fprintf(listing, "Calling Statement\n");
+        fprintf(listing, "Calling Function : %s\n", tree->attr.name);
         break;
       default:
         fprintf(listing, "Unknown statement kind\n");

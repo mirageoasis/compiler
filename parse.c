@@ -555,7 +555,6 @@ TreeNode * iteration_stmt(void)
 
 TreeNode *expression(void)
 {
-  TreeNode *ret;
   TreeNode *temp = NULL;
   // 일단 var = expresssion 을 만든다.
   fprintf(stdout,"in expression function\n");
@@ -593,8 +592,6 @@ TreeNode *expression(void)
 	else
 		t = simple_expression(q);
 	return t;
-
-  return ret;
 }
 
 
@@ -684,7 +681,6 @@ TreeNode *additive_expression(TreeNode *f)
         p->attr.op = token;
         t = p;
         t->child[1] = addop(token);
-        match(token);
         t->child[2] = term(NULL);
       }
     }
@@ -695,14 +691,14 @@ TreeNode *additive_expression(TreeNode *f)
 TreeNode * addop(TokenType token){
   TreeNode * t = newExpNode(calK);
   t->attr.op = token;
-
+  match(token);
   return t;
 }
 
 TreeNode * mulop(TokenType token){
   TreeNode * t = newExpNode(calK);
   t->attr.op = token;
-
+  match(token);
   return t;
 }
 
@@ -728,7 +724,6 @@ TreeNode *term(TreeNode *f)
         p->attr.op = token;
         t = p;
         t->child[1] = mulop(token);
-        match(token);
         p->child[2] = factor(NULL);
       }
     }
